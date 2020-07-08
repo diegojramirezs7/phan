@@ -1,0 +1,65 @@
+body{
+	background-color: #5f5f5f;
+}
+
+.conversation{
+	background-color: #7f7f7f;
+	color: #fff;
+	margin-bottom: 1vh;
+}
+
+.convoCard{
+  max-width: 58vw;
+  margin-bottom: 1vh;
+  border-style: outset;
+}
+
+.convoStarter{
+	border-bottom: 1px solid black;
+}
+
+.convoStarterImage{
+	max-height: 100%;
+	max-width: 100%;
+}
+
+.convoFooter{
+  float: right;
+}
+
+.startConvo{
+	margin-bottom: 1vh;
+	border-style: outset;
+	background-color: #fff;
+}
+
+.headerLink{
+	color: #fff;
+}
+
+.headerLink:hover{
+	color: #fff;
+}
+
+
+.roomBox{
+	background-color: #5f5f5f;
+}
+
+
+.relatedPosts{
+	border-bottom: 1px solid black;
+}
+
+
+.roomCard{
+	display: block;
+	height: 25vh;
+	width: 19vw;
+	margin-bottom: 1vh;
+	border-style: outset;
+}
+
+
+
+
