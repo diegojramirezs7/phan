@@ -10,12 +10,14 @@ function RelatedPosts(props){
 			{
 				Object.keys(posts).map(postId => (
 					<Post 
-						key={posts[postId].key}
+						key={postId}
 						author={posts[postId].author}
 						title={posts[postId].title}
 						content={posts[postId].content}
 						upvotes={posts[postId].upvotes}
 						downvotes={posts[postId].downvotes}
+						postKey={posts[postId].key}
+						convoKey={props.convoKey}
 					/>
 				))
 			}

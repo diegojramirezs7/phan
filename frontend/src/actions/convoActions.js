@@ -26,20 +26,22 @@ export function downvote_convo(convoId){
 	})
 }
 
-export function upvote_post(){
+export function upvote_post(convoId, postId){
 	return ({
 		type: UPVOTE_POST,
 		payload: {
-			count: 1 
+			convoKey: convoId,
+			postKey: postId 
 		}
 	})
 }
 
-export function downvote_post(){
+export function downvote_post(convoId, postId){
 	return ({
 		type: DOWNVOTE_POST,
 		payload: { 
-			count: 1 
+			convoKey: convoId,
+			postKey: postId
 		}
 	})
 }

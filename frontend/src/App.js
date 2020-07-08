@@ -23,7 +23,7 @@ const preloadedState = {
 	convos: {
 		'12345': {
 			key: '12345',
-			relationship: 'started',
+			relationship: ['started'],
 			convoStarter: {
 				title: "Katie Boulter is the most heavenly creature on the planet.",
 				author: "Diego Ramirez",
@@ -36,22 +36,22 @@ const preloadedState = {
 		 		" She is based at the Lawn Tennis Association's National Tennis Centre in Roehampton and is coached by Jeremy Bates, Nigel Sears and Mark Taylor."
 			},
 			relatedPosts: {
-				1: {
-					key: 1,
+				"1": {
+					key: "1",
 					author: "Emma Watson",
 					title: "hell yeess, even I'm in love with her. ",
 					content: "She is so gorgeous, just look at her eyes and her smile. "+
 					"Besides that she's probably going to be the next big deal in tennis. Next number one in the world.",
-					upvotes: "77",
-					downvotes: "34"
+					upvotes: 77,
+					downvotes: 34
 				},
-				2: {
-					key: 3,
+				"2": {
+					key: "2",
 					author: "Serena Williams",
 					title: "Totally, I think about her every day.",
 					content: "I don't really think I need anything else to this, it's just so obvious",
-					upvotes: "4m",
-					downvotes: "1m"
+					upvotes: 4,
+					downvotes: 1
 				}
 			},
 			convoFooter: {
@@ -62,7 +62,7 @@ const preloadedState = {
 		},
 		'78910': {
 			key: '78910',
-			relationship: 'saved',
+			relationship: ['saved'],
 			convoStarter: {
 				title: "Programming is the new poetry.",
 				author: "Diego Ramirez",
@@ -75,23 +75,23 @@ const preloadedState = {
 		 		" Computer programming is the process of designing and building an executable computer program to accomplish a specific computing result. "
 			},
 			relatedPosts: {
-				4: {
-					key: 4,
+				"4": {
+					key: "4",
 					author: "Alan Turing",
 					title: "As you know, I'm the father of computer science. You're welcome",
 					content: "A computer would deserve to be called intelligent if it could deceive a human into believing that it was human."+
 					" Otherwise, you just can't do it.",
-					upvotes: "77",
-					downvotes: "34"
+					upvotes: 77,
+					downvotes: 34
 				},
-				5: {
-					key: 5,
+				"5": {
+					key: "5",
 					author: "Charles Babbage",
 					title: "This Turing guy ...",
 					content: "He might be the father of computer science, but I'm the father of computers in general."+
 					" You tell me which one is more important.",
-					upvotes: "4m",
-					downvotes: "1m"
+					upvotes: 4,
+					downvotes: 1
 				}
 			},
 			convoFooter: {
@@ -137,6 +137,7 @@ const preloadedState = {
 
 function reducer(state = "", action){
 	const convoKey = action.payload ? action.payload.convoKey: null;
+	var postKey = "";
 	switch(action.type){
 		case 'UPVOTE_CONVO':
 			return {
@@ -162,6 +163,42 @@ function reducer(state = "", action){
 						convoFooter: {
 							...state.convos[convoKey].convoFooter,
 							downvotes: state.convos[convoKey].convoFooter.downvotes - 1
+						}
+					}
+				}
+			}
+		case 'UPVOTE_POST':
+			postKey = action.payload.postKey;
+			return {
+				...state,
+				convos: {
+					...state.convos,
+					[convoKey]: {
+						...state.convos[convoKey],
+						relatedPosts: {
+							...state.convos[convoKey].relatedPosts,
+							[postKey]: {
+								...state.convos[convoKey].relatedPosts[postKey],
+								upvotes: state.convos[convoKey].relatedPosts[postKey].upvotes + 1
+							}
+						}
+					}
+				}
+			}
+		case 'DOWNVOTE_POST':
+			postKey = action.payload.postKey;
+			return {
+				...state,
+				convos: {
+					...state.convos,
+					[convoKey]: {
+						...state.convos[convoKey],
+						relatedPosts: {
+							...state.convos[convoKey].relatedPosts,
+							[postKey]: {
+								...state.convos[convoKey].relatedPosts[postKey],
+								downvotes: state.convos[convoKey].relatedPosts[postKey].downvotes - 1
+							}
 						}
 					}
 				}
