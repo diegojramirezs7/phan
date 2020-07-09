@@ -23,7 +23,7 @@ const preloadedState = {
 	convos: {
 		'12345': {
 			key: '12345',
-			relationship: ['started'],
+			relevantRels: {},
 			convoStarter: {
 				title: "Katie Boulter is the most heavenly creature on the planet.",
 				author: "Diego Ramirez",
@@ -42,6 +42,7 @@ const preloadedState = {
 					title: "hell yeess, even I'm in love with her. ",
 					content: "She is so gorgeous, just look at her eyes and her smile. "+
 					"Besides that she's probably going to be the next big deal in tennis. Next number one in the world.",
+					relevantRels: {},
 					upvotes: 77,
 					downvotes: 34
 				},
@@ -50,6 +51,7 @@ const preloadedState = {
 					author: "Serena Williams",
 					title: "Totally, I think about her every day.",
 					content: "I don't really think I need anything else to this, it's just so obvious",
+					relevantRels: {},
 					upvotes: 4,
 					downvotes: 1
 				}
@@ -62,7 +64,7 @@ const preloadedState = {
 		},
 		'78910': {
 			key: '78910',
-			relationship: ['saved'],
+			relevantRels: {},
 			convoStarter: {
 				title: "Programming is the new poetry.",
 				author: "Diego Ramirez",
@@ -81,6 +83,7 @@ const preloadedState = {
 					title: "As you know, I'm the father of computer science. You're welcome",
 					content: "A computer would deserve to be called intelligent if it could deceive a human into believing that it was human."+
 					" Otherwise, you just can't do it.",
+					relevantRels: {},
 					upvotes: 77,
 					downvotes: 34
 				},
@@ -90,14 +93,15 @@ const preloadedState = {
 					title: "This Turing guy ...",
 					content: "He might be the father of computer science, but I'm the father of computers in general."+
 					" You tell me which one is more important.",
+					relevantRels: {},
 					upvotes: 4,
 					downvotes: 1
 				}
 			},
 			convoFooter: {
 				score: 7,
-				upvotes: 1345,
-				downvotes: 773
+				upvotes: 7777,
+				downvotes: 111
 			}
 		}
 	},
@@ -138,37 +142,63 @@ const preloadedState = {
 function reducer(state = "", action){
 	const convoKey = action.payload ? action.payload.convoKey: null;
 	var postKey = "";
+	var upvotes = 0, downvotes = 0;
+	var upvoted = false, downvoted = false;
 	switch(action.type){
 		case 'UPVOTE_CONVO':
+			upvotes = state.convos[convoKey].convoFooter.upvotes;
+			downvotes = state.convos[convoKey].convoFooter.downvotes;
+			upvoted = state.convos[convoKey].relevantRels['upvoted'];
+			downvoted = state.convos[convoKey].relevantRels['downvoted'];
 			return {
 				...state,
 				convos: {
 					...state.convos,
 					[convoKey]: {
 						...state.convos[convoKey],
+						relevantRels: {
+							...state.convos[convoKey].relevantRels,
+							upvoted: !upvoted,
+							downvoted: false,
+						},
 						convoFooter: {
 							...state.convos[convoKey].convoFooter,
-							upvotes: state.convos[convoKey].convoFooter.upvotes + 1
+							upvotes: (upvoted)? upvotes - 1: upvotes + 1,
+							downvotes: (downvoted) ? downvotes - 1: downvotes
 						}
 					} 
 				}
 			}
 		case 'DOWNVOTE_CONVO':
+		 	downvotes = state.convos[convoKey].convoFooter.downvotes;
+		 	upvotes = state.convos[convoKey].convoFooter.upvotes;
+		 	upvoted = state.convos[convoKey].relevantRels['upvoted'];
+		 	downvoted = state.convos[convoKey].relevantRels['downvoted'];
 			return {
 				...state,
 				convos: {
 					...state.convos,
 					[convoKey]: {
 						...state.convos[convoKey],
+						relevantRels: {
+							...state.convos[convoKey].relevantRels,
+							upvoted: false,
+							downvoted: !downvoted,
+						},
 						convoFooter: {
 							...state.convos[convoKey].convoFooter,
-							downvotes: state.convos[convoKey].convoFooter.downvotes - 1
+							downvotes: (downvoted)? downvotes - 1: downvotes + 1,
+							upvotes: (upvoted)? upvotes - 1: upvotes
 						}
 					}
 				}
 			}
 		case 'UPVOTE_POST':
 			postKey = action.payload.postKey;
+			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
+			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
+			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
+			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
 			return {
 				...state,
 				convos: {
@@ -179,7 +209,13 @@ function reducer(state = "", action){
 							...state.convos[convoKey].relatedPosts,
 							[postKey]: {
 								...state.convos[convoKey].relatedPosts[postKey],
-								upvotes: state.convos[convoKey].relatedPosts[postKey].upvotes + 1
+								relevantRels: {
+									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
+									downvoted: false,
+									upvoted: !upvoted
+								},
+								upvotes: (upvoted)? upvotes - 1: upvotes + 1,
+								downvotes: (downvoted)? downvotes - 1: downvotes
 							}
 						}
 					}
@@ -187,6 +223,10 @@ function reducer(state = "", action){
 			}
 		case 'DOWNVOTE_POST':
 			postKey = action.payload.postKey;
+			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
+			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
+			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
+			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
 			return {
 				...state,
 				convos: {
@@ -197,11 +237,32 @@ function reducer(state = "", action){
 							...state.convos[convoKey].relatedPosts,
 							[postKey]: {
 								...state.convos[convoKey].relatedPosts[postKey],
-								downvotes: state.convos[convoKey].relatedPosts[postKey].downvotes - 1
+								relevantRels: {
+									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
+									upvoted: false,
+									downvoted: !downvoted
+								},
+								downvotes: (downvoted)? downvotes - 1: downvotes + 1,
+								upvotes: (upvoted)? upvotes - 1: upvotes
 							}
 						}
 					}
 				}
+			}
+		case 'SAVE_CONVO':
+			return {
+				...state,
+				convos: {
+					...state.convos,
+					[convoKey]: {
+						...state.convos[convoKey],
+						relevantRels: {
+							...state.convos[convoKey].relevantRels,
+							saved: (state.convos[convoKey].relevantRels.saved)?false : true
+						}
+					}
+				}
+				
 			}
 		default: 
 			return state;
@@ -217,9 +278,7 @@ class App extends React.Component {
 		this.state = {}
 	}
 
-	componentDidMount(){
-
-	}
+	componentDidMount(){}
 
 	handleMe(){
 		console.log(store.getState());

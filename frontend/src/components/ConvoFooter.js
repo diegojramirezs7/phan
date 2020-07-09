@@ -53,23 +53,32 @@ class ConvoFooter extends React.Component{
 		this.props.dispatch(actions.downvote_convo(convoKey));
 	}
 
-	render(){
-		const {score, upvotes, downvotes} = this.props.footer;
+	handleSave(e){
+		const convoKey = this.props.convoKey;
+		this.props.dispatch(actions.save_convo(convoKey));
+	}
 
+	render(){
+		const {upvotes, downvotes} = this.props.footer;
+		const {convoKey, convos} = this.props;
 		const tfStyle = {
 			marginBottom: "2vh"
 		}
-
-
 		return (
 			<div className="convoFooter">
-				<IconButton size="small" title="save" >
+				<IconButton size="small" title="save" 
+					style={(convos[convoKey].relevantRels['saved'])?{color: "blue"}:null}
+					onClick={(e) => this.handleSave(e)}>
 					<BookmarkIcon />
 				</IconButton>
-				<IconButton size="small" title="downvote" onClick={() => this.handleDownvote()}>
+				<IconButton size="small" title="downvote" 
+					style={(convos[convoKey].relevantRels['downvoted'])?{color: "blue"}:null}
+					onClick={() => this.handleDownvote()}>
 					<ArrowDownwardIcon />{downvotes}
 				</IconButton>
-				<IconButton size="small" title="upvote" onClick={() => this.handleUpvote()}>
+				<IconButton size="small" title="upvote"
+					style={(convos[convoKey].relevantRels['upvoted'])?{color: "blue"}:null}
+					onClick={() => this.handleUpvote()}>
 					<ArrowUpwardIcon />{upvotes}
 				</IconButton>
 				<IconButton size="small" title="share your thoughts" onClick={(e) => this.handleToggle(e)}>
@@ -118,4 +127,11 @@ class ConvoFooter extends React.Component{
 	}
 }
 
-export default connect()(ConvoFooter);
+function mapStateToProps(state){
+	return {
+		convos: state.convos
+	}
+}
+
+
+export default connect(mapStateToProps)(ConvoFooter);

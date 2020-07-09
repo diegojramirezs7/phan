@@ -19,6 +19,7 @@ class Post extends React.Component {
 	}
 
 	render(){
+		const {convos, convoKey, postKey} = this.props;
 		return (
 			<div className="col-md-9" >
 				<Typography variant="subtitle2" style={{fontWeight: 700}}>
@@ -32,10 +33,14 @@ class Post extends React.Component {
 				<Typography variant="body1" component="p">
 					{this.props.content}
 				</Typography>
-				<IconButton size="small" onClick={() => this.handleDownvote()}>
+				<IconButton size="small" 
+					style={(convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'])?{color:'blue'}:null}
+					onClick={() => this.handleDownvote()}>
 					<ArrowDownwardIcon />{this.props.downvotes}
 				</IconButton>
-				<IconButton size="small" onClick={() => this.handleUpvote()}>
+				<IconButton size="small" 
+					style={(convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'])?{color:'blue'}:null}
+					onClick={() => this.handleUpvote()}>
 					<ArrowUpwardIcon />{this.props.upvotes}
 				</IconButton>
 			</div>
@@ -43,4 +48,10 @@ class Post extends React.Component {
 	}
 }
 
-export default connect()(Post);
+function mapStateToProps(state){
+	return {
+		convos: state.convos
+	}
+}
+
+export default connect(mapStateToProps)(Post);

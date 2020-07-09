@@ -46,11 +46,11 @@ export function downvote_post(convoId, postId){
 	})
 }
 
-export function save_convo(){
+export function save_convo(convoId){
 	return ({
-		type: DOWNVOTE_POST,
+		type: SAVE_CONVO,
 		payload: { 
-			count: 1 
+			convoKey: convoId 
 		}
 	})
 }
