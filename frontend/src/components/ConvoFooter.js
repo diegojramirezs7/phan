@@ -58,6 +58,17 @@ class ConvoFooter extends React.Component{
 		this.props.dispatch(actions.save_convo(convoKey));
 	}
 
+	handleConvoReply(){
+		const convoKey = this.props.convoKey;
+		const postBody = {
+			title: this.state.premise,
+			content: this.state.explanation,
+			author: this.props.user.name
+		}
+		this.props.dispatch(actions.reply_convo(convoKey, postBody));
+		this.handleToggle();
+	}
+
 	render(){
 		const {upvotes, downvotes} = this.props.footer;
 		const {convoKey, convos} = this.props;
@@ -102,7 +113,7 @@ class ConvoFooter extends React.Component{
 			    			fullWidth
 			    			style={tfStyle}
 			    			value={this.state.premise}
-			    			onChange={(e)=>this.handlePremiseChange(e)}
+			    			onChange={(e) => this.handlePremiseChange(e) }
 	    				/>
 	    				<TextField
 				          	id="standard-multiline-static"
@@ -112,11 +123,12 @@ class ConvoFooter extends React.Component{
 				          	placeholder="Further Thoughts"
 				          	style={tfStyle}
 				          	value={this.state.explanation}
-			    			onChange={(e)=>this.handleExplanationChange(e)}
+			    			onChange={ (e) => this.handleExplanationChange(e) }
 				        />
 				    </DialogContent>
 				     <DialogActions>
-	          			<Button style={{background: "#5f5f5f", color: "#fff"}} variant="contained">
+	          			<Button style={{background: "#5f5f5f", color: "#fff"}} 
+	          				variant="contained" onClick={ () => this.handleConvoReply() }>
 	            			Post
 	          			</Button>
 	       		 	</DialogActions>
@@ -129,6 +141,7 @@ class ConvoFooter extends React.Component{
 
 function mapStateToProps(state){
 	return {
+		user: state.currentUser,
 		convos: state.convos
 	}
 }
