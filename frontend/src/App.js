@@ -12,6 +12,7 @@ import {
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
+import convo_reducer from './reducers/convoReducer';
 
 
 const preloadedState = {
@@ -139,138 +140,8 @@ const preloadedState = {
 	}
 }
 
-function reducer(state = "", action){
-	const convoKey = action.payload ? action.payload.convoKey: null;
-	var postKey = "";
-	var upvotes = 0, downvotes = 0;
-	var upvoted = false, downvoted = false;
-	switch(action.type){
-		case 'UPVOTE_CONVO':
-			upvotes = state.convos[convoKey].convoFooter.upvotes;
-			downvotes = state.convos[convoKey].convoFooter.downvotes;
-			upvoted = state.convos[convoKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relevantRels['downvoted'];
-			return {
-				...state,
-				convos: {
-					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							upvoted: !upvoted,
-							downvoted: false,
-						},
-						convoFooter: {
-							...state.convos[convoKey].convoFooter,
-							upvotes: (upvoted)? upvotes - 1: upvotes + 1,
-							downvotes: (downvoted) ? downvotes - 1: downvotes
-						}
-					} 
-				}
-			}
-		case 'DOWNVOTE_CONVO':
-		 	downvotes = state.convos[convoKey].convoFooter.downvotes;
-		 	upvotes = state.convos[convoKey].convoFooter.upvotes;
-		 	upvoted = state.convos[convoKey].relevantRels['upvoted'];
-		 	downvoted = state.convos[convoKey].relevantRels['downvoted'];
-			return {
-				...state,
-				convos: {
-					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							upvoted: false,
-							downvoted: !downvoted,
-						},
-						convoFooter: {
-							...state.convos[convoKey].convoFooter,
-							downvotes: (downvoted)? downvotes - 1: downvotes + 1,
-							upvotes: (upvoted)? upvotes - 1: upvotes
-						}
-					}
-				}
-			}
-		case 'UPVOTE_POST':
-			postKey = action.payload.postKey;
-			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
-			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
-			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
-			return {
-				...state,
-				convos: {
-					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relatedPosts: {
-							...state.convos[convoKey].relatedPosts,
-							[postKey]: {
-								...state.convos[convoKey].relatedPosts[postKey],
-								relevantRels: {
-									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
-									downvoted: false,
-									upvoted: !upvoted
-								},
-								upvotes: (upvoted)? upvotes - 1: upvotes + 1,
-								downvotes: (downvoted)? downvotes - 1: downvotes
-							}
-						}
-					}
-				}
-			}
-		case 'DOWNVOTE_POST':
-			postKey = action.payload.postKey;
-			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
-			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
-			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
-			return {
-				...state,
-				convos: {
-					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relatedPosts: {
-							...state.convos[convoKey].relatedPosts,
-							[postKey]: {
-								...state.convos[convoKey].relatedPosts[postKey],
-								relevantRels: {
-									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
-									upvoted: false,
-									downvoted: !downvoted
-								},
-								downvotes: (downvoted)? downvotes - 1: downvotes + 1,
-								upvotes: (upvoted)? upvotes - 1: upvotes
-							}
-						}
-					}
-				}
-			}
-		case 'SAVE_CONVO':
-			return {
-				...state,
-				convos: {
-					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							saved: (state.convos[convoKey].relevantRels.saved)?false : true
-						}
-					}
-				}
-				
-			}
-		default: 
-			return state;
-	}
-}
 
-
-var store = createStore(reducer, preloadedState, applyMiddleware(thunk));
+var store = createStore(convo_reducer, preloadedState, applyMiddleware(thunk));
 
 class App extends React.Component {
 	constructor(props){
