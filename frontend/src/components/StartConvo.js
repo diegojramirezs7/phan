@@ -13,6 +13,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import Chip from '@material-ui/core/Chip';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import IconButton from '@material-ui/core/IconButton';
+import {connect} from 'react-redux';
+import {create_convo} from '../actions/convoActions';
 
 
 class StartConvo extends React.Component {
@@ -76,6 +78,16 @@ class StartConvo extends React.Component {
 	deleteImage(){}
 
 	shareConvo(){
+		const convoContent = {
+			title: this.state.premise,
+			author: this.props.user['name'],
+			rooms: this.state.selectedRooms,
+			hasImage: false,
+			image: "",
+			content: this.state.explanation
+		}
+		this.props.dispatch(create_convo(convoContent));
+		this.handleToggle();
 	}
 
 	handlePremiseChange(e){
@@ -184,7 +196,8 @@ class StartConvo extends React.Component {
 				    		
 				    		<CameraAltIcon/>
 				    	</IconButton> 
-	          			<Button style={{background: "#5f5f5f", color: "#fff"}} variant="contained">
+	          			<Button style={{background: "#5f5f5f", color: "#fff"}} 
+	          				variant="contained" onClick={() => this.shareConvo() }>
 	            			Share
 	          			</Button>
 	       		 	</DialogActions>
@@ -195,4 +208,11 @@ class StartConvo extends React.Component {
 	}
 }
 
-export default StartConvo;
+function mapStateToProps(state){
+	return {
+		user: state.currentUser
+	}
+}
+
+export default connect(mapStateToProps)(StartConvo);
+

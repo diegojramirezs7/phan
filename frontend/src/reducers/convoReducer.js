@@ -1,10 +1,35 @@
-
 export default function convo_reducer(state = "", action){
 	const convoKey = action.payload ? action.payload.convoKey: null;
 	var postKey = "";
 	var upvotes = 0, downvotes = 0;
 	var upvoted = false, downvoted = false;
 	switch(action.type){
+		case 'CREATE_CONVO':
+			const convo_content = action.payload.convoData;
+			return {
+				...state,
+				convos: {
+					...state.convos,
+					[convo_content.title]: {
+						key: convo_content.title,
+						relevantRels: {},
+						convoStarter: {
+							title: convo_content.title,
+							author: convo_content.author,
+							room: convo_content.rooms[0],
+							hasImage: convo_content.hasImage,
+							image: convo_content.image,
+							content: convo_content.content
+						},
+						relatedPosts: {},
+						convoFooter: {
+							score: 0,
+							upvotes: 0,
+							downvotes: 0
+						}
+					}
+				}
+			}
 		case 'UPVOTE_CONVO':
 			upvotes = state.convos[convoKey].convoFooter.upvotes;
 			downvotes = state.convos[convoKey].convoFooter.downvotes;
@@ -127,6 +152,8 @@ export default function convo_reducer(state = "", action){
 			const p_author = action.payload.postData["author"];
 			const p_title = action.payload.postData["title"];
 			const p_content = action.payload.postData["content"];
+
+			//still need to change it 
 			return {
 				...state,
 				convos: {

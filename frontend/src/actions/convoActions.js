@@ -1,3 +1,4 @@
+export const CREATE_CONVO = 'CREATE_CONVO';
 export const UPVOTE_CONVO = 'UPVOTE_CONVO';
 export const DOWNVOTE_CONVO = 'DOWNVOTE_CONVO';
 export const UPVOTE_POST = 'UPVOTE_POST';
@@ -8,6 +9,15 @@ export const SHARE_CONVO = 'SHARE_CONVO';
 export const FETCH_CONVOS_BEGIN = 'FETCH_CONVOS_BEGIN';
 export const FETCH_CONVOS_SUCCESS = 'FETCH_CONVOS_SUCCESS';
 export const FETCH_CONVOS_ERROR = 'FETCH_CONVOS_ERROR';
+
+export function create_convo(convoContent){
+	return({
+		type: CREATE_CONVO,
+		payload: {
+			convoData: convoContent
+		}
+	})
+}
 
 export function upvote_convo(convoId){
 	return ({
@@ -65,6 +75,8 @@ export function reply_convo(convoId, postContent){
 		}
 	})
 }
+
+
 
 // ------------------------------------- TO DO --------------------------------------- //
 
