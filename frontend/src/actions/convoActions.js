@@ -76,19 +76,7 @@ export function reply_convo(convoId, postContent){
 	})
 }
 
-
-
 // ------------------------------------- TO DO --------------------------------------- //
-
-
-export function share_convo(){
-	return ({
-		type: SHARE_CONVO,
-		payload: { 
-			count: 1 
-		}
-	})
-}
 
 export function fetchConvosBegin(){
 	return ({
@@ -115,6 +103,10 @@ export function fetchConvosError(){
 			count: 1
 		}
 	})
+}
+
+export function fetchConvos(){
+	
 }
 
 
