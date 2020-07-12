@@ -8,10 +8,10 @@ class User(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=100)
 	joined = models.DateField("Registration Date", auto_now_add=True)
-	bio = models.CharField("Bio", max_length=4096)
-	score = models.IntegerField(default=0)
-	following = models.ManyToManyField("self")
-	followers = models.ManyToManyField("self")
+	bio = models.CharField("Bio", max_length=4096, null=True, blank=True)
+	score = models.IntegerField(default=0, null=True, blank=True)
+	following = models.ManyToManyField("self", null=True, blank=True)
+	followers = models.ManyToManyField("self", null=True, blank=True)
 
 	def __str__(self):
 		return self.name
@@ -21,10 +21,10 @@ class Room(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=256)
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="room_author")
-	description = models.CharField("Description", max_length=1024)
+	description = models.CharField("Description", max_length=1024, blank=True)
 	created = models.DateField("Registration Date", auto_now_add=True)
-	score = models.IntegerField(default=0)
-	followers = models.ManyToManyField(User, related_name="room_followers")
+	score = models.IntegerField(default=0, null=True, blank=True)
+	followers = models.ManyToManyField(User, related_name="room_followers", null=True, blank=True)
 
 	def __str__(self):
 		return self.name
@@ -33,11 +33,11 @@ class Room(models.Model):
 class Post(models.Model):
 	key = models.CharField("Key", max_length=256)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
-	title = models.CharField("Title", max_length=240)
+	title = models.CharField("Title", max_length=240, null=True, blank=True)
 	created = models.DateField("Registration Date", auto_now_add=True)
-	upvotes = models.IntegerField(default=0)
-	downvotes = models.IntegerField(default=0)
-	score = models.IntegerField(default=0)
+	upvotes = models.IntegerField(default=0, null=True, blank=True)
+	downvotes = models.IntegerField(default=0, null=True, blank=True)
+	score = models.IntegerField(default=0, null=True, blank=True)
 
 	def __str__(self):
 		return self.title
@@ -48,14 +48,14 @@ class Convo(models.Model):
 	title = models.CharField("Title", max_length=240)
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="convo_author")
 	created = models.DateField("Registration Date", auto_now_add=True)
-	image = models.CharField("Image", max_length=200)
-	content = models.CharField("Content", max_length=1024)
-	rooms = models.ManyToManyField(Room)
-	posts = models.ManyToManyField(Post)
-	followers = models.ManyToManyField(User, related_name="convo_followers")
-	score = models.IntegerField(default=0)
-	upvotes = models.IntegerField(default=0)
-	downvotes = models.IntegerField(default=0)
+	image = models.CharField("Image", max_length=200, blank=True)
+	content = models.CharField("Content", max_length=1024, blank=True)
+	rooms = models.ManyToManyField(Room, null=True, blank=True)
+	posts = models.ManyToManyField(Post, null=True, blank=True)
+	followers = models.ManyToManyField(User, related_name="convo_followers", null=True, blank=True)
+	score = models.IntegerField(default=0, null=True, blank=True)
+	upvotes = models.IntegerField(default=0, null=True, blank=True)
+	downvotes = models.IntegerField(default=0, null=True, blank=True)
 
 	
 	def published_recently(self):
