@@ -15,6 +15,7 @@ import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import IconButton from '@material-ui/core/IconButton';
 import {connect} from 'react-redux';
 import {create_convo} from '../actions/convoActions';
+import axios from 'axios';
 
 
 class StartConvo extends React.Component {
@@ -78,6 +79,8 @@ class StartConvo extends React.Component {
 	deleteImage(){}
 
 	shareConvo(){
+		this.fetchConvos();
+
 		const convoContent = {
 			title: this.state.premise,
 			author: this.props.user['name'],
@@ -88,6 +91,13 @@ class StartConvo extends React.Component {
 		}
 		this.props.dispatch(create_convo(convoContent));
 		this.handleToggle();
+	}
+
+	fetchConvos(){
+		axios.get("http://localhost:8000/api/convos")
+		.then(res => {
+			console.log(res["data"]);
+		})
 	}
 
 	handlePremiseChange(e){
