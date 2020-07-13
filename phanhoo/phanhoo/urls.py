@@ -14,16 +14,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from .views import *
+from phanhooapi import views
+from django.conf.urls import url
 
 # the include() functions allows to reference other URLconfs
 """
  Whenever Django encounters include(), it chops off whatever part of the URL matched up to that point 
  and sends the remaining string to the included URLconf for further processing. Otherwise, it maps urls to views.
 """
+# urlpatterns = [
+#     path('admin/', admin.site.urls),
+#     # handle both create and listing POST & GET
+#     re_path(r'^api/convos/$', views.convos),
+#     # handle both delete and update DELETE & PUT
+#     re_path(r'^api/convos/(P[0-9]+)$', views.convo_details),
+# 	# path('api/', include('phanhooapi.urls')),
+#     path('test/<int:num_param>', index)
+# ]
+
+
 urlpatterns = [
-	path('api/', include('phanhooapi.urls')),
     path('admin/', admin.site.urls),
-    path('test/<int:num_param>', index)
+    path('api/', include('phanhooapi.urls')),
 ]

@@ -56,22 +56,13 @@ class Convo(models.Model):
 	score = models.IntegerField(default=0, null=True, blank=True)
 	upvotes = models.IntegerField(default=0, null=True, blank=True)
 	downvotes = models.IntegerField(default=0, null=True, blank=True)
-
 	
 	def published_recently(self):
 		# if created is greater than yesterday
 		return self.created >= timezone.now() - datetime.timedelta(days=1)
 
-
 	def __str__(self):
 		return self.title
-
-
-
-
-
-
-
 
 
 
