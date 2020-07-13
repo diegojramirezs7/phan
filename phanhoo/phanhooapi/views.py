@@ -28,9 +28,10 @@ def convos(request):
 
 
 @api_view(['PUT', 'DELETE'])
-def convo_details(request, pk):
+def convo_details(request):
 	try:
 		# gets all objects in Convos
+		key = request.body.get('key')
 		convo = Convo.objects.get(pk=pk)
 	except Convo.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
