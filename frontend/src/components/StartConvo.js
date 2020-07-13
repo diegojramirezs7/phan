@@ -89,14 +89,15 @@ class StartConvo extends React.Component {
 			image: "",
 			content: this.state.explanation
 		}
+
 		this.props.dispatch(create_convo(convoContent));
 		this.handleToggle();
 	}
 
 	fetchConvos(){
-		axios.get("http://localhost:8000/api/convos")
+		axios.get("http://localhost:8000/api/convos/")
 		.then(res => {
-			console.log(res["data"]);
+			console.log(res["data"][0]);
 		})
 	}
 
@@ -117,8 +118,31 @@ class StartConvo extends React.Component {
 		//we add all the keys of the values we get
 		this.setState({
 			selectedRooms: values
+		});
+	}
+
+	add_convo = e => {
+		e.preventDefault();
+		// this.state is the body of the post request
+		axios.post("/url", this.state).then(() => {
+			this.props.resetState();
+			this.props.toggle();
 		})
 	}
+
+	update_convo = e => {
+		e.preventDefault();
+	 	axios.put("API_URL" + this.state.pk, this.state).then(() => {
+      		this.props.resetState();
+      		this.props.toggle();
+    	});
+	}
+
+
+	defaultIfEmpty = value => {
+    	return value === "" ? "" : value;
+  	};
+
 
 	render(){
 		const imageStyle = {
@@ -218,11 +242,13 @@ class StartConvo extends React.Component {
 	}
 }
 
+
 function mapStateToProps(state){
 	return {
 		user: state.currentUser
 	}
 }
+
 
 export default connect(mapStateToProps)(StartConvo);
 
