@@ -137,6 +137,10 @@ const preloadedState = {
 			name: "Robert Smith",
           	bio: "Musician. The Cure's Frontman. I'd rather cut off my hands before receiving an award from the royal family."
 		}
+	},
+	communication: {
+		loading: false,
+		loadingSuccess: false
 	}
 }
 

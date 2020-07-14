@@ -14,7 +14,7 @@ import Chip from '@material-ui/core/Chip';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import IconButton from '@material-ui/core/IconButton';
 import {connect} from 'react-redux';
-import {create_convo} from '../actions/convoActions';
+import * as actions from '../actions/convoActions';
 import axios from 'axios';
 
 
@@ -78,28 +78,6 @@ class StartConvo extends React.Component {
 
 	deleteImage(){}
 
-	shareConvo(){
-		this.fetchConvos();
-
-		const convoContent = {
-			title: this.state.premise,
-			author: this.props.user['name'],
-			rooms: this.state.selectedRooms,
-			hasImage: false,
-			image: "",
-			content: this.state.explanation
-		}
-
-		this.props.dispatch(create_convo(convoContent));
-		this.handleToggle();
-	}
-
-	fetchConvos(){
-		axios.get("http://localhost:8000/api/convos/")
-		.then(res => {
-			console.log(res["data"][0]);
-		})
-	}
 
 	handlePremiseChange(e){
 		this.setState({
@@ -130,12 +108,46 @@ class StartConvo extends React.Component {
 		})
 	}
 
-	update_convo = e => {
-		e.preventDefault();
-	 	axios.put("API_URL" + this.state.pk, this.state).then(() => {
-      		this.props.resetState();
-      		this.props.toggle();
-    	});
+	// -------------------- Fetching and Updating (API interactino) ------------------- //
+
+	shareConvo(){
+		//this.props(dispatch(actions.add_convo_begin()))
+
+		const convoContent = {
+			title: this.state.premise,
+			author: this.props.user['name'],
+			rooms: this.state.selectedRooms,
+			hasImage: false,
+			image: "",
+			content: this.state.explanation
+		}
+
+		this.send_convo(convoContent)
+		//this.send_convo();
+
+		//this.props.dispatch(actions.create_convo(convoContent));
+		this.handleToggle();
+	}
+	fetchConvos(){
+		axios.get("http://localhost:8000/api/convos/")
+		.then(res => {
+			console.log(res['data']);
+		})
+	}
+
+	send_convo(convoContent){
+		//this.props.dispatch(actions.add_convo_begin())
+	 	
+	 	axios.post("http://localhost:8000/api/convos/", {
+	 	 	convo: convoContent
+	 	})
+	 	.then(response => {
+	 		console.log(response);
+	 	})
+    	.catch(error => {
+    		//this.props.resetState();
+    		console.log(error);
+    	})
 	}
 
 

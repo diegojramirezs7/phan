@@ -4,13 +4,13 @@ export default function convo_reducer(state = "", action){
 	var upvotes = 0, downvotes = 0;
 	var upvoted = false, downvoted = false;
 	switch(action.type){
-		case 'CREATE_CONVO':
-			const convo_content = action.payload.convoData;
+		case 'ADD_CONVO':
+			var convo_content = action.payload.convo;
 			return {
 				...state,
 				convos: {
 					...state.convos,
-					[convo_content.title]: {
+					[convo_content.key]: {
 						key: convo_content.title,
 						relevantRels: {},
 						convoStarter: {
@@ -28,6 +28,15 @@ export default function convo_reducer(state = "", action){
 							downvotes: 0
 						}
 					}
+				}
+			}
+		case 'ADD_CONVO_SUCCESS':
+			var convo_content = action.payload.convo;
+			return {
+				...state,
+				convos: {
+					...state.convos,
+					[convo_content.key]: convo_content
 				}
 			}
 		case 'UPVOTE_CONVO':

@@ -9,6 +9,9 @@ export const SHARE_CONVO = 'SHARE_CONVO';
 export const FETCH_CONVOS_BEGIN = 'FETCH_CONVOS_BEGIN';
 export const FETCH_CONVOS_SUCCESS = 'FETCH_CONVOS_SUCCESS';
 export const FETCH_CONVOS_ERROR = 'FETCH_CONVOS_ERROR';
+export const ADD_CONVO_BEGIN = 'ADD_CONVO_BEGIN';
+export const ADD_CONVO_SUCCESS = 'ADD_CONVO_SUCCESS';
+export const ADD_CONVO_ERROR = 'ADD_CONVO_ERROR';
 
 export function create_convo(convoContent){
 	return({
@@ -77,21 +80,41 @@ export function reply_convo(convoId, postContent){
 }
 
 // ------------------------------------- TO DO --------------------------------------- //
-
-export function fetchConvosBegin(){
+export function add_convo_begin(){
 	return ({
-		type: FETCH_CONVOS_BEGIN,
-		payload: { 
-			count: 1 
+		type: ADD_CONVO_BEGIN
+	})
+}
+
+export function add_convo_success(convoContent){
+	return ({
+		type: ADD_CONVO_SUCCESS,
+		payload: {
+			convo: convoContent
 		}
 	})
 }
 
-export function fetchConvosSuccess(){
+export function add_convo_error(){
+	return ({
+		type: ADD_CONVO_ERROR
+	})
+}
+
+
+
+
+export function fetchConvosBegin(){
+	return ({
+		type: FETCH_CONVOS_BEGIN
+	})
+}
+
+export function fetchConvosSuccess(convoContent){
 	return ({
 		type: FETCH_CONVOS_SUCCESS,
-		payload: {
-			count: 1
+		payload: { 
+			convoData: convoContent
 		}
 	})
 }
@@ -105,8 +128,6 @@ export function fetchConvosError(){
 	})
 }
 
-export function fetchConvos(){
-	
-}
+export function fetchConvos(){}
 
 
