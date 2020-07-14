@@ -6,6 +6,7 @@ from rest_framework import status
 from .models import Convo
 from .serializers import *
 import json
+import hashlib 
 
 @api_view(['GET', 'POST'])
 def convos(request):
@@ -15,10 +16,12 @@ def convos(request):
 			serializer = ConvoSerializer(convo, context={'request': request}, many=True)
 			return Response(serializer.data)
 		elif request.method == 'POST':
-			serializer = ConvoSerializer(data=request.data)
-			if serializer.is_valid():
-				serializer.save()
-				return Response(status=status.HTTP_201_CREATED)
+			print(request.data)
+			return HttpResponse("nothing to see here")
+			# serializer = ConvoSerializer(data=request.data)
+			# if serializer.is_valid():
+			# 	serializer.save()
+			# 	return Response(status=status.HTTP_201_CREATED)
 
 			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	except Convo.DoesNotExist:
@@ -31,7 +34,7 @@ def convos(request):
 def convo_details(request):
 	try:
 		# gets all objects in Convos
-		key = request.body.get('key')
+		key = haslib.sha256(request.body.get('key').encode()).hexdigest()
 		convo = Convo.objects.get(pk=pk)
 	except Convo.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
@@ -53,16 +56,25 @@ def convo_details(request):
 def convo_list(request):
 	convo = Convo.objects.all()
 	d = {
-		'author': str(convo[0].author),
-		'title': convo[0].title,
-		'content': convo[0].content, 
-		'score': convo[0].score,
-		'upvotes': convo[0].upvotes,
-		'downvotes': convo[0].downvotes
+		'key': hashlib.sha256(convo[0].key.encode()).hexdigest(),
+		'relevantRels': {'created': True},
+		'convoStarter': {
+			'author': str(convo[0].author),
+			'title': convo[0].title,
+			'room': str(convo[0].rooms.all()[0]),
+			'content': convo[0].content,
+			'hasImage': False,
+			'image': ''
+		},
+		'relatedPosts': {},
+		'convoFooter': {
+			'score': convo[0].score,
+			'upvotes': convo[0].upvotes,
+			'downvotes': convo[0].downvotes,
+		}
 	}
+
 	return JsonResponse(d)
-
-
 
 
 """
