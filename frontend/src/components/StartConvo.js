@@ -114,6 +114,7 @@ class StartConvo extends React.Component {
 		//this.props(dispatch(actions.add_convo_begin()))
 
 		const convoContent = {
+			userKey: this.props.user['key'],
 			title: this.state.premise,
 			author: this.props.user['name'],
 			rooms: this.state.selectedRooms,
@@ -138,11 +139,10 @@ class StartConvo extends React.Component {
 	send_convo(convoContent){
 		//this.props.dispatch(actions.add_convo_begin())
 	 	
-	 	axios.post("http://localhost:8000/api/convos/", {
-	 	 	convo: convoContent
-	 	})
+	 	axios.get("http://localhost:8000/api/convos/")
 	 	.then(response => {
-	 		console.log(response);
+	 		console.log(response['data']);
+	 		//this.props.dispatch(actions.add_convo_success(response['data']));
 	 	})
     	.catch(error => {
     		//this.props.resetState();
