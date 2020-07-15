@@ -27,6 +27,8 @@ ALLOWED_HOSTS = []
 
 CORS_ORIGIN_ALLOW_ALL = True
 
+CORS_ALLOW_HEADERS = ('user-key')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -38,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
-
     'phanhooapi.apps.PhanhooapiConfig'
 ]
 
@@ -53,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'phanhoo.urls'
 

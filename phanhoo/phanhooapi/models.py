@@ -7,6 +7,7 @@ import datetime
 class User(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=100)
+	user_url = models.CharField("URL", max_length=256, null=True, blank=True)
 	joined = models.DateField("Registration Date", auto_now_add=True)
 	bio = models.CharField("Bio", max_length=4096, null=True, blank=True)
 	score = models.IntegerField(default=0, null=True, blank=True)
@@ -20,6 +21,7 @@ class User(models.Model):
 class Room(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=256)
+	room_url = models.CharField("URL", max_length=256, null=True, blank=True)
 	author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="room_author")
 	description = models.CharField("Description", max_length=1024, blank=True)
 	created = models.DateField("Registration Date", auto_now_add=True)

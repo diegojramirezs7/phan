@@ -12,9 +12,12 @@ import hashlib
 def convos(request):
 	try:
 		if request.method == 'GET':
+			user_key = request.headers.get('User-Key')
 			convo = Convo.objects.all()
 			serializer = ConvoSerializer(convo, context={'request': request}, many=True)
-			return Response(serializer.data)
+			response = Response(serializer.data)
+			print(user_key)
+			return response
 		elif request.method == 'POST':
 			print(request.data)
 			return HttpResponse("nothing to see here")
@@ -56,7 +59,7 @@ def convo_details(request):
 @api_view(['POST', 'GET'])
 def convo_list(request):
 	if request.method == 'GET':
-		convo = Convo.objects.all()
+		convo = Convo.objects.all().filter()
 		results = []
 		for item in convo:
 			d = {
