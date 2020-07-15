@@ -53,28 +53,33 @@ def convo_details(request):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['POST', 'GET'])
 def convo_list(request):
-	convo = Convo.objects.all()
-	d = {
-		'key': hashlib.sha256(convo[0].key.encode()).hexdigest(),
-		'relevantRels': {'created': True},
-		'convoStarter': {
-			'author': str(convo[0].author),
-			'title': convo[0].title,
-			'room': str(convo[0].rooms.all()[0]),
-			'content': convo[0].content,
-			'hasImage': False,
-			'image': ''
-		},
-		'relatedPosts': {},
-		'convoFooter': {
-			'score': convo[0].score,
-			'upvotes': convo[0].upvotes,
-			'downvotes': convo[0].downvotes,
-		}
-	}
+	if request.method == 'GET':
+		convo = Convo.objects.all()
+		results = []
+		for item in convo:
+			d = {
+				'key': hashlib.sha256(item.key.encode()).hexdigest(),
+				'relevantRels': {'created': True},
+				'convoStarter': {
+					'author': str(item.author),
+					'title': item.title,
+					'room': str(item.rooms.all()[0]),
+					'content': item.content,
+					'hasImage': False,
+					'image': ''
+				},
+				'relatedPosts': {},
+				'convoFooter': {
+					'score': item.score,
+					'upvotes': item.upvotes,
+					'downvotes': item.downvotes,
+				}
+			}
+			results.append(d)
 
-	return JsonResponse(d)
+	return Response(results)
 
 
 """
