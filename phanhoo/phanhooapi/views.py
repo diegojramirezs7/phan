@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
-from .models import Convo
+from .models import *
 from .serializers import *
 import json
 import hashlib 
@@ -13,14 +13,34 @@ def convos(request):
 	try:
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
-			convo = Convo.objects.all()
+			current_user = User.objects.get(key=user_key)
+			convo = Convo.objects.filter(author=current_user)
 			serializer = ConvoSerializer(convo, context={'request': request}, many=True)
 			response = Response(serializer.data)
-			print(user_key)
 			return response
 		elif request.method == 'POST':
-			print(request.data)
-			return HttpResponse("nothing to see here")
+
+			convo_received = request.data.get('data').get('convo')
+
+			d = {
+				'key': hashlib.sha256(convo_received.get('userKey').encode()).hexdigest(),
+				'relevantRels': {'created': True},
+				'convoStarter': {
+					'author': convo_received.get('author'),
+					'title': convo_received.get('title'),
+					'room': convo_received.get('rooms')[0],
+					'content': convo_received.get('content'),
+					'hasImage': convo_received.get('hasImage'),
+					'image': convo_received.get('image')
+				},
+				'relatedPosts': {},
+				'convoFooter': {
+					'score': 0,
+					'upvotes': 0,
+					'downvotes': 0,
+				}
+			}
+			return Response(d)
 			# serializer = ConvoSerializer(data=request.data)
 			# if serializer.is_valid():
 			# 	serializer.save()
@@ -59,7 +79,9 @@ def convo_details(request):
 @api_view(['POST', 'GET'])
 def convo_list(request):
 	if request.method == 'GET':
-		convo = Convo.objects.all().filter()
+		user_key = request.headers.get('User-Key')
+		current_user = User.objects.get(key=user_key)
+		convo = Convo.objects.filter(author=current_user)
 		results = []
 		for item in convo:
 			d = {
@@ -68,10 +90,10 @@ def convo_list(request):
 				'convoStarter': {
 					'author': str(item.author),
 					'title': item.title,
-					'room': str(item.rooms.all()[0]),
+					'room': str(item.mainroom),
 					'content': item.content,
-					'hasImage': False,
-					'image': ''
+					'hasImage': True,
+					'image': item.image
 				},
 				'relatedPosts': {},
 				'convoFooter': {
