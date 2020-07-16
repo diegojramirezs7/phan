@@ -102,19 +102,17 @@ export function add_convo_error(){
 }
 
 
-
-
 export function fetchConvosBegin(){
 	return ({
 		type: FETCH_CONVOS_BEGIN
 	})
 }
 
-export function fetchConvosSuccess(convoContent){
+export function fetchConvosSuccess(convoList){
 	return ({
 		type: FETCH_CONVOS_SUCCESS,
 		payload: { 
-			convoData: convoContent
+			convos: convoList
 		}
 	})
 }

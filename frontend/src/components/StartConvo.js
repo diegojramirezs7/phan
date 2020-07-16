@@ -123,26 +123,41 @@ class StartConvo extends React.Component {
 			content: this.state.explanation
 		}
 
-		this.send_convo(convoContent)
-		//this.send_convo();
+		//this.send_convo(convoContent)
+		this.fetchConvos();
 
-		//this.props.dispatch(actions.create_convo(convoContent));
 		this.handleToggle();
 	}
+
 	fetchConvos(){
-		axios.get("http://localhost:8000/api/convos/")
-		.then(res => {
-			console.log(res['data']);
+		axios.get("http://localhost:8000/api/convos/", {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		})
+		.then(response => {
+			const convos = response['data'];
+	 		this.props.dispatch(actions.fetchConvosSuccess(convos));
+		})
+		.catch(error => {
+			console.log(error);
 		})
 	}
 
 	send_convo(convoContent){
-		//this.props.dispatch(actions.add_convo_begin())
-	 	
-	 	axios.get("http://localhost:8000/api/convos/")
+		//sort of done on this side, server still needs work
+		//still need to process image
+	 	axios.post("http://localhost:8000/api/convos/", {
+	 		headers: {
+	 			'User-Key': this.props.user['key']
+	 		},
+	 		data: {
+	 			convo: convoContent
+	 		}
+	 	})
 	 	.then(response => {
 	 		console.log(response['data']);
-	 		//this.props.dispatch(actions.add_convo_success(response['data']));
+	 		this.props.dispatch(actions.add_convo_success(response['data']));
 	 	})
     	.catch(error => {
     		//this.props.resetState();
@@ -169,7 +184,7 @@ class StartConvo extends React.Component {
 		};
 
 		return(
-			 <div className="col-md-9 startConvo">
+			 <div className="startConvo">
     			<Link to="#" style={{display: "flex", alignItems: "center", color: "#5f5f5f",}}>
     				<Avatar>
         				<AccountCircleIcon />

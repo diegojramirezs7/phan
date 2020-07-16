@@ -28,6 +28,7 @@ body{
 }
 
 .startConvo{
+	max-width: 58vw;
 	margin-bottom: 1vh;
 	border-style: outset;
 	background-color: #fff;

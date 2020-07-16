@@ -3,35 +3,20 @@ export default function convo_reducer(state = "", action){
 	var postKey = "";
 	var upvotes = 0, downvotes = 0;
 	var upvoted = false, downvoted = false;
+	var convo_content = null;
 	switch(action.type){
-		case 'ADD_CONVO':
-			var convo_content = action.payload.convo;
+		case 'FETCH_CONVOS_SUCCESS':
+			const convos = action.payload.convos;
+			const updatedConvos = {...state.convos};
+			convos.forEach(convo => {
+				updatedConvos[convo['key']] = convo
+			})
 			return {
 				...state,
-				convos: {
-					...state.convos,
-					[convo_content.key]: {
-						key: convo_content.title,
-						relevantRels: {},
-						convoStarter: {
-							title: convo_content.title,
-							author: convo_content.author,
-							room: convo_content.rooms[0],
-							hasImage: convo_content.hasImage,
-							image: convo_content.image,
-							content: convo_content.content
-						},
-						relatedPosts: {},
-						convoFooter: {
-							score: 0,
-							upvotes: 0,
-							downvotes: 0
-						}
-					}
-				}
+				convos: updatedConvos
 			}
 		case 'ADD_CONVO_SUCCESS':
-			var convo_content = action.payload.convo;
+			convo_content = action.payload.convo;
 			return {
 				...state,
 				convos: {
@@ -184,6 +169,8 @@ export default function convo_reducer(state = "", action){
 					}
 				}
 			}
+		case 'SET_USER':
+			return {}
 		default: 
 			return state;
 	}

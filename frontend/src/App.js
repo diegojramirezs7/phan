@@ -17,7 +17,7 @@ import convo_reducer from './reducers/convoReducer';
 
 const preloadedState = {
 	currentUser: {
-		key: '24680',
+		key: '111',
 		name: 'Diego Ramirez',
 		score: 7
 	},
@@ -153,7 +153,12 @@ class App extends React.Component {
 		this.state = {}
 	}
 
-	componentDidMount(){}
+	componentDidMount(){
+		// axios.get("http://localhost:8000/api/user")
+		// .then(response => {
+		// 	this.props.dispatch({type: 'SET_USER', payload: response.data})
+		// })
+	}
 
 	handleMe(){
 		console.log(store.getState());
