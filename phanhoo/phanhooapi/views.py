@@ -6,7 +6,8 @@ from rest_framework import status
 from .models import *
 from .serializers import *
 import json
-import hashlib 
+import hashlib
+import random
 
 @api_view(['GET', 'POST'])
 def convos(request):
@@ -19,10 +20,10 @@ def convos(request):
 			response = Response(serializer.data)
 			return response
 		elif request.method == 'POST':
-
-			convo_received = request.data.get('data').get('convo')
-
-			d = {
+			user_key = request.headers.get('User-Key')
+			convo_received = request.data.get('convo')
+			current_user = User.objects.get(key=user_key)
+			response_dic = {
 				'key': hashlib.sha256(convo_received.get('userKey').encode()).hexdigest(),
 				'relevantRels': {'created': True},
 				'convoStarter': {
@@ -40,18 +41,35 @@ def convos(request):
 					'downvotes': 0,
 				}
 			}
+
+			model_dic = {
+				'key': hashlib.sha256(str(random.randint(0, 700)).encode()).hexdigest(),
+				'title': convo_received.get('title'),
+				'author': current_user.id,
+				'content': convo_received.get('content'),
+				#'mainroom': convo_received.get('mainroom'),
+				'image': '',
+				#'rooms' = models.ManyToManyField(Room, blank=True)
+				#followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
+				#upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
+				#downvoters = models.ManyToManyField(User, related_name="downvoters", blank=True)
+				'score': 0,
+				'upvotes': 0,
+				'downvotes': 0
+			}
+			serializer = ConvoSerializer(data=model_dic)
+			serializer.is_valid()
+			print(serializer.errors)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(response_dic, status=status.HTTP_201_CREATED)
 			
-			return Response(d)
-			# serializer = ConvoSerializer(data=request.data)
-			# if serializer.is_valid():
-			# 	serializer.save()
-			# 	return Response(status=status.HTTP_201_CREATED)
 
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	except Convo.DoesNotExist:
 		raise Http404("Question Does Not Exist")
 
-	return JsonResponse(d)
+	#return JsonResponse(d)
 
 
 @api_view(['PUT', 'DELETE'])
@@ -104,6 +122,8 @@ def convo_list(request):
 				}
 			}
 			results.append(d)
+	elif request.method == 'POST':
+		results = []
 
 	return Response(results)
 

@@ -32,6 +32,12 @@ class Room(models.Model):
 		return self.name
 
 
+class Tag(models.Model):
+	key = models.CharField("Key", max_length=256)
+	name = models.CharField("Name", max_length=256)
+	tag_url = models.CharField("URL", max_length=512)
+
+
 class Convo(models.Model):
 	key = models.CharField("Key", max_length=256)
 	title = models.CharField("Title", max_length=240)
