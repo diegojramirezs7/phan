@@ -28,7 +28,7 @@ def convos(request):
 				'convoStarter': {
 					'author': convo_received.get('author'),
 					'title': convo_received.get('title'),
-					'room': convo_received.get('rooms')[0],
+					'room': convo_received.get('mainroom'),
 					'content': convo_received.get('content'),
 					'hasImage': convo_received.get('hasImage'),
 					'image': convo_received.get('image')
@@ -40,13 +40,14 @@ def convos(request):
 					'downvotes': 0,
 				}
 			}
+			
 			return Response(d)
 			# serializer = ConvoSerializer(data=request.data)
 			# if serializer.is_valid():
 			# 	serializer.save()
 			# 	return Response(status=status.HTTP_201_CREATED)
 
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	except Convo.DoesNotExist:
 		raise Http404("Question Does Not Exist")
 
