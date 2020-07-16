@@ -117,6 +117,7 @@ class StartConvo extends React.Component {
 			userKey: this.props.user['key'],
 			title: this.state.premise,
 			author: this.props.user['name'],
+			mainroom: this.state.selectedRooms[0],
 			rooms: this.state.selectedRooms,
 			hasImage: false,
 			image: "",
