@@ -18,6 +18,15 @@ class User(models.Model):
 		return self.name
 
 
+class Tag(models.Model):
+	key = models.CharField("Key", max_length=256)
+	name = models.CharField("Name", max_length=256)
+	tag_url = models.CharField("URL", max_length=512)
+
+	def __str__(self):
+		return self.name
+
+
 class Room(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=256)
@@ -26,19 +35,14 @@ class Room(models.Model):
 	description = models.CharField("Description", max_length=1024, blank=True)
 	created = models.DateField("Registration Date", auto_now_add=True)
 	score = models.IntegerField(default=0, null=True, blank=True)
+	rank = models.IntegerField(default=0, null=True, blank=True)
 	followers = models.ManyToManyField(User, related_name="room_followers", blank=True)
+	tags = models.ManyToManyField(Tag, related_name="room_tags", blank=True)
+
 
 	def __str__(self):
 		return self.name
 
-
-class Tag(models.Model):
-	key = models.CharField("Key", max_length=256)
-	name = models.CharField("Name", max_length=256)
-	tag_url = models.CharField("URL", max_length=512)
-
-	def __str__(self):
-		return self.name
 
 
 class Convo(models.Model):
@@ -50,6 +54,7 @@ class Convo(models.Model):
 	content = models.CharField("Content", max_length=2048, blank=True)
 	mainroom = models.ForeignKey(Room, related_name="main_room", blank=True, null=True, on_delete=models.CASCADE)
 	rooms = models.ManyToManyField(Room, related_name="side_rooms", blank=True)
+	tags = models.ManyToManyField(Tag, related_name="convo_tags", blank=True)
 	followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
 	upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
 	downvoters = models.ManyToManyField(User, related_name="downvoters", blank=True)
