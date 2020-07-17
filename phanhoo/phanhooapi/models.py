@@ -37,6 +37,9 @@ class Tag(models.Model):
 	name = models.CharField("Name", max_length=256)
 	tag_url = models.CharField("URL", max_length=512)
 
+	def __str__(self):
+		return self.name
+
 
 class Convo(models.Model):
 	key = models.CharField("Key", max_length=256)
@@ -46,7 +49,7 @@ class Convo(models.Model):
 	image = models.CharField("Image", max_length=256, blank=True)
 	content = models.CharField("Content", max_length=2048, blank=True)
 	mainroom = models.ForeignKey(Room, related_name="main_room", blank=True, null=True, on_delete=models.CASCADE)
-	rooms = models.ManyToManyField(Room, blank=True)
+	rooms = models.ManyToManyField(Room, related_name="side_rooms", blank=True)
 	followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
 	upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
 	downvoters = models.ManyToManyField(User, related_name="downvoters", blank=True)
