@@ -124,8 +124,8 @@ class StartConvo extends React.Component {
 			content: this.state.explanation
 		}
 
-		//this.send_convo(convoContent)
-		this.fetchConvos();
+		this.send_convo(convoContent)
+		//this.fetchConvos();
 
 		this.handleToggle();
 	}
@@ -149,13 +149,12 @@ class StartConvo extends React.Component {
 		//sort of done on this side, server still needs work
 		//still need to process image
 	 	axios.post("http://localhost:8000/api/convos/", {
+	 		convo: convoContent
+	 	}, {
 	 		headers: {
 	 			'User-Key': this.props.user['key']
-	 		},
-	 		data: {
-	 			convo: convoContent
-	 		}
-	 	})
+	 		}}
+	 	)
 	 	.then(response => {
 	 		console.log(response['data']);
 	 		this.props.dispatch(actions.add_convo_success(response['data']));
