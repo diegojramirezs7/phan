@@ -28,7 +28,11 @@ class StartConvo extends React.Component {
 			image: React.createRef(),
 			imageUploaded: false,
 			imageFile: "",
-			selectedRooms: []
+			mainroom: "",
+			tags: [],
+			error: "",
+			suggestRooms: [],
+			suggestTags: []
 		};
 
 		this.rooms = [
@@ -42,6 +46,17 @@ class StartConvo extends React.Component {
 			{title: "Quantum Mechanics", rank: "10", key: "quantumMechanics"},
 			{title: "Particle Physics", rank: "10", key: "particlePhysics"}
 		]
+	}
+
+	componentDidMount(){
+		//take the rooms and tags present on the state and add them to be possible suggestions
+		// for autocomplete
+		const rooms = Object.keys(this.props.rooms).map(roomId => this.props.rooms[roomId].title);
+		const tags = Object.keys(this.props.tags).map(tagId => this.props.tags[tagId].name);
+		this.setState({
+			suggestRooms: rooms,
+			suggestTags: tags
+		})
 	}
 
 	handleToggle(){
@@ -91,22 +106,44 @@ class StartConvo extends React.Component {
 		});
 	}
 
-	handleAutocomplete(ev, values, opt){
+	autocompleteRoom(ev, value, opt){
 		//every change in the autocomplete box, we get all the values
 		//we add all the keys of the values we get
 		this.setState({
-			selectedRooms: values
+			mainroom: value
 		});
 	}
 
-	add_convo = e => {
-		e.preventDefault();
-		// this.state is the body of the post request
-		axios.post("/url", this.state).then(() => {
-			this.props.resetState();
-			this.props.toggle();
+	autocompleteTags(ev, values, opt){
+		this.setState({
+			tags: values
 		})
 	}
+
+
+	validateInput(){
+		if(this.state.premise === "" || this.state.explanation === ""){
+			return false;
+		}else{
+			this.validateRoom();
+		}
+	}
+
+	validateRoom(){
+		//check if rooms is in rooms on state
+		//if not, send request to backend to check if room is in DB
+		//if not, ask user to create room
+		const currentRoom = this.state.mainroom;
+		if(this.state.suggestRooms.includes(currentRoom)){
+			console.log("it's in the suggestions");
+			//return true;
+		}else{
+			const url_query = "http://localhost:8000/api/rooms?name="+currentRoom;
+			console.log(url_query);
+			//axios.get()
+		}
+	}
+
 
 	// -------------------- Fetching and Updating (API interactino) ------------------- //
 
@@ -117,14 +154,19 @@ class StartConvo extends React.Component {
 			userKey: this.props.user['key'],
 			title: this.state.premise,
 			author: this.props.user['name'],
-			mainroom: this.state.selectedRooms[0],
-			rooms: this.state.selectedRooms,
+			mainroom: this.state.mainroom,
+			tags: this.state.tags,
 			hasImage: false,
-			image: "",
+			image: this.state.image,
 			content: this.state.explanation
 		}
 
-		this.send_convo(convoContent)
+		console.log(convoContent);
+		this.setState({
+			error: this.state.premise
+		})
+
+		//this.send_convo(convoContent)
 		//this.fetchConvos();
 
 		this.handleToggle();
@@ -157,7 +199,7 @@ class StartConvo extends React.Component {
 	 	)
 	 	.then(response => {
 	 		console.log(response['data']);
-	 		this.props.dispatch(actions.add_convo_success(response['data']));
+	 		//this.props.dispatch(actions.add_convo_success(response['data']));
 	 	})
     	.catch(error => {
     		//this.props.resetState();
@@ -168,7 +210,7 @@ class StartConvo extends React.Component {
 
 	defaultIfEmpty = value => {
     	return value === "" ? "" : value;
-  	};
+  	}
 
 
 	render(){
@@ -232,21 +274,33 @@ class StartConvo extends React.Component {
 				        	accept="image/*" name="image" onChange={(e)=>this.handleImageUpload(e) }
 				        />
 				        <img alt="" ref={this.state.image} style={this.state.imageUploaded ? imageStyle: null}/>
-
+				        <Autocomplete
+							id="rooms-standard"
+						    options={this.state.suggestRooms}
+						  	fullWidth
+						  	freeSolo
+						  	onChange={(event, value, opt)=>this.autocompleteRoom(event, value, opt)}
+						  	onBlur={() => this.validateRoom()}
+						  	renderInput={(params) => 
+						  		<TextField {...params} label="Room to Share" variant="outlined" style={tfStyle}
+						  		/>
+						  	}
+						/>
+						<div className="error-div">{this.state.error}</div>
 					    <Autocomplete
 							id="tags-standard"
 							multiple
-						    options={this.rooms.map((option) => option.title)}
+						    options={this.state.suggestTags}
 						  	fullWidth
 						  	freeSolo
-						  	onChange={(event, value, opt)=>this.handleAutocomplete(event, value, opt)}
+						  	onChange={(event, value, opt)=>this.autocompleteTags(event, value, opt)}
 						  	renderTags={(value, getTagProps) =>
 					          value.map((option, index) => (
 					            <Chip label={option} {...getTagProps({ index })} />
 					          ))
 					        }
 						  	renderInput={(params) => 
-						  		<TextField {...params} label="Post in Room" variant="outlined" style={tfStyle}
+						  		<TextField {...params} label="Add Tags" variant="outlined" style={tfStyle}
 						  		/>
 						  	}
 						/>
@@ -272,10 +326,11 @@ class StartConvo extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		user: state.currentUser
+		user: state.currentUser,
+		rooms: state.rooms,
+		tags: state.tags
 	}
 }
 
 
 export default connect(mapStateToProps)(StartConvo);
-

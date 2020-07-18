@@ -141,7 +141,31 @@ const preloadedState = {
 	communication: {
 		loading: false,
 		loadingSuccess: false
+	},
+	tags: {
+		'1234': {
+			key: '1234',
+			name: 'Programming',
+			tag_url: '/programming'
+		},
+		'4567': {
+			key: '4567',
+			name: 'Tennis',
+			tag_url: '/tennis'
+		},
+		'7890': {
+			key: '7890',
+			name: 'Beauty',
+			tag_url: '/beauty'
+		},
+		'9090': {
+			key: '9090',
+			name: 'Software',
+			tag_url: '/software'
+		}
+
 	}
+
 }
 
 
