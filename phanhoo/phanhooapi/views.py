@@ -15,25 +15,18 @@ def save_convo_model(convoDic, user_key):
 		# other rooms, if they exist add them. Otherwise, create them as well. 
 		current_user = [x for x in User.objects.filter(key=user_key)]
 		mainroom = [x for x in Room.objects.filter(name=convoDic.get('mainroom'))]
+		print(convoDic.get('tags'))
 
-		print(convoDic.get('mainroom'))
-		print(mainroom)
-
-		if not mainroom:
-			#create 
-			room_dic = {
-				'key': hashlib.sha256(str(random.randint(0, 700)).encode()).hexdigest(),
-				'name': mainroom
-			}
-
-		if current_user:
+		if current_user and mainroom:
+			hash_input = convoDic.get('title') + str(current_user[0].id) + convoDic.get('content')
+			mainroom = mainroom[0].id
 			model_dic = {
-				'key': hashlib.sha256(str(random.randint(0, 700)).encode()).hexdigest(),
+				'key': hashlib.sha256(hash_input.encode()).hexdigest(),
 				'title': convoDic.get('title'),
 				'author': current_user[0].id,
 				'content': convoDic.get('content'),
-				#'mainroom': convo_received.get('mainroom'),
-				#'rooms': convoDic.rooms,
+				'mainroom': mainroom,
+				#'tags': convoDic.rooms,
 				'image': '',
 				#followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
 				#upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
@@ -53,7 +46,6 @@ def save_convo_model(convoDic, user_key):
 		print(str(e))
 		return None
 
-	
 
 def prepare_client_response(modelSer):
 	if modelSer.is_valid():
@@ -95,7 +87,9 @@ def convos(request):
 			serializer = save_convo_model(convo_received, user_key)
 
 			if serializer:
-				response_dic = prepare_client_response(serializer)
+				#response_dic = prepare_client_response(serializer)
+				print(serializer)
+				
 				return Response("some data", status=status.HTTP_201_CREATED)
 
 				#serializer = ConvoSerializer(data=model_dic)
@@ -163,6 +157,32 @@ def convo_list(request):
 		results = []
 
 	return Response(results)
+
+
+@api_view(['GET', 'POST'])
+def rooms(request):
+	try:
+		if request.method == 'GET':
+			room_name = request.query_params.get('name')
+			room = [x for x in Room.objects.filter(name=room_name)]
+			if room:
+				room = room[0]
+				response_dic = {
+					'key': room.key,
+					'name': room.name,
+					'relationship': 'suggested',
+					'visitors': 900,
+					'description': room.description
+				}
+				return Response(response_dic, status=status.HTTP_200_OK)
+			else:
+				return Response(data="room doesn't exist, do you want to create it now?", status=status.HTTP_202_ACCEPTED)
+		elif request.method == 'POST':
+			pass
+	except Exception as e:
+		print(str(e))
+		return Response(str(e))
+
 
 
 """
