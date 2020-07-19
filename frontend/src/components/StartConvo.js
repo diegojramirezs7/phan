@@ -32,7 +32,8 @@ class StartConvo extends React.Component {
 			tags: [],
 			error: "",
 			suggestRooms: [],
-			suggestTags: []
+			suggestTags: [],
+			roomValidated: false
 		};
 
 		this.rooms = [
@@ -51,11 +52,18 @@ class StartConvo extends React.Component {
 	componentDidMount(){
 		//take the rooms and tags present on the state and add them to be possible suggestions
 		// for autocomplete
-		const rooms = Object.keys(this.props.rooms).map(roomId => this.props.rooms[roomId].title);
+		
 		const tags = Object.keys(this.props.tags).map(tagId => this.props.tags[tagId].name);
 		this.setState({
-			suggestRooms: rooms,
 			suggestTags: tags
+		})
+		this.addRoomSuggestions()
+	}
+
+	addRoomSuggestions(){
+		const rooms = Object.keys(this.props.rooms).map(roomId => this.props.rooms[roomId].title);
+		this.setState({
+			suggestRooms: rooms
 		})
 	}
 
@@ -64,7 +72,10 @@ class StartConvo extends React.Component {
 			active: !this.state.active,
 			imageUploaded: false, 
 			premise: "",
-			explanation: ""
+			explanation: "",
+			error: "",
+			mainroom: "",
+			tags: []
 		});
 	}
 
@@ -96,22 +107,23 @@ class StartConvo extends React.Component {
 
 	handlePremiseChange(e){
 		this.setState({
-			premise: e.target.value
+			premise: e.target.value,
+			error: ""
 		});
 	}
 
 	handleExplanationChange(e){
 		this.setState({
-			explanation: e.target.value
+			explanation: e.target.value,
+			error: ""
 		});
 	}
 
-	autocompleteRoom(ev, value, opt){
-		//every change in the autocomplete box, we get all the values
-		//we add all the keys of the values we get
+	autocompleteRoom(ev, value){
 		this.setState({
-			mainroom: value
-		});
+			mainroom: value,
+			error: ""
+		})
 	}
 
 	autocompleteTags(ev, values, opt){
@@ -123,33 +135,86 @@ class StartConvo extends React.Component {
 
 	validateInput(){
 		if(this.state.premise === "" || this.state.explanation === ""){
+			this.setState({
+				error: "Please fill the input fields."
+			})
 			return false;
-		}else{
-			this.validateRoom();
+		}else if (this.state.mainroom === ""){
+			this.setState({
+				error: "Please select a room for your convo."
+			})
+			return false;
+		}
+		else if(!this.state.roomValidated){
+			//if function is returned directly, it will return undefined sometimes. 
+			const result = this.validateRoom();
+			return result;
+		}else {
+			this.setState({
+				error: ""
+			})
+			return true;
 		}
 	}
 
 	validateRoom(){
-		//check if rooms is in rooms on state
-		//if not, send request to backend to check if room is in DB
-		//if not, ask user to create room
-		const currentRoom = this.state.mainroom;
+		const currentRoom = this.state.mainroom.trim();
 		if(this.state.suggestRooms.includes(currentRoom)){
-			console.log("it's in the suggestions");
-			//return true;
-		}else{
-			const url_query = "http://localhost:8000/api/rooms?name="+currentRoom;
-			console.log(url_query);
-			//axios.get()
+			this.setState({
+				error: "",
+				roomValidated: true
+			})
+			return true;
+		}else if (currentRoom === ""){
+			this.setState({
+				error: "",
+				roomValidated: false
+			})
+			return false;
+		}
+		else{
+			const roomParam = currentRoom.toLowerCase().replace(" ", "%20")
+			const url_query = "http://localhost:8000/api/rooms?name="+roomParam;
+
+			axios.get(url_query, {
+				headers: {
+					'User-Key': this.props.user['key']
+				}
+			})
+			.then(response => {
+				if (response['status'] === 200){
+					this.props.dispatch(actions.add_room(response['data']))
+					this.addRoomSuggestions();
+					this.setState({
+						error: "",
+						roomValidated: true,
+					})
+					return true;
+				}else if (response['status'] === 202){
+					this.setState({
+						error: response['data'],
+						roomValidated: false
+					})
+					return false;
+				}else {
+					this.setState({
+						roomValidated: false
+					})
+					return false;
+				}
+			})
+			.catch(error => {
+				console.log(error);
+				return false;
+			})
 		}
 	}
 
 
-	// -------------------- Fetching and Updating (API interactino) ------------------- //
+	// -------------------- Fetching and Updating (API interaction) ------------------- //
 
 	shareConvo(){
 		//this.props(dispatch(actions.add_convo_begin()))
-
 		const convoContent = {
 			userKey: this.props.user['key'],
 			title: this.state.premise,
@@ -157,19 +222,19 @@ class StartConvo extends React.Component {
 			mainroom: this.state.mainroom,
 			tags: this.state.tags,
 			hasImage: false,
-			image: this.state.image,
+			//image: this.state.image,
 			content: this.state.explanation
 		}
 
-		console.log(convoContent);
-		this.setState({
-			error: this.state.premise
-		})
-
-		//this.send_convo(convoContent)
+		
 		//this.fetchConvos();
+		var result = this.validateInput();
+		//console.log(result);
 
-		this.handleToggle();
+		if (result){
+			this.handleToggle();
+			this.send_convo(convoContent);
+		}
 	}
 
 	fetchConvos(){
@@ -221,9 +286,10 @@ class StartConvo extends React.Component {
 			textAlign: "center",
 			display: "block"
 		};
-		const tfStyle = {
-			marginBottom: "2vh"
-		};
+
+		const tfStyle={
+			marginBottom: '2vh'
+		}
 
 		return(
 			 <div className="startConvo">
@@ -279,14 +345,14 @@ class StartConvo extends React.Component {
 						    options={this.state.suggestRooms}
 						  	fullWidth
 						  	freeSolo
-						  	onChange={(event, value, opt)=>this.autocompleteRoom(event, value, opt)}
+						  	onInputChange={(ev, value) => this.autocompleteRoom(ev, value)}
 						  	onBlur={() => this.validateRoom()}
 						  	renderInput={(params) => 
 						  		<TextField {...params} label="Room to Share" variant="outlined" style={tfStyle}
 						  		/>
 						  	}
 						/>
-						<div className="error-div">{this.state.error}</div>
+						
 					    <Autocomplete
 							id="tags-standard"
 							multiple
@@ -301,9 +367,13 @@ class StartConvo extends React.Component {
 					        }
 						  	renderInput={(params) => 
 						  		<TextField {...params} label="Add Tags" variant="outlined" style={tfStyle}
+						  		
 						  		/>
 						  	}
 						/>
+						<div className="create-convo-error-div">
+							{this.state.error}
+						</div>
 
 				    </DialogContent>
 				    <DialogActions>

@@ -170,7 +170,22 @@ export default function convo_reducer(state = "", action){
 				}
 			}
 		case 'SET_USER':
-			return {}
+			return state;
+		case 'ADD_ROOM':
+			const room = action.payload.room;
+			return {
+				...state,
+				rooms: {
+					...state.rooms,
+					[room.key]: {
+						key: room.key,
+						relationship: room.relationship,
+						title: room.name,
+						visitors: room.visitors,
+						description: room.description
+					}
+				}
+			}
 		default: 
 			return state;
 	}

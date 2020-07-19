@@ -61,6 +61,15 @@ body{
 	border-style: outset;
 }
 
+.create-convo-error-div{
+	margin-bottom: 2vh;
+	color: red;
+}
+
+.create-convo-text-field{
+	margin-bottom: 2vh;
+}
+
 
 
 

@@ -12,6 +12,7 @@ export const FETCH_CONVOS_ERROR = 'FETCH_CONVOS_ERROR';
 export const ADD_CONVO_BEGIN = 'ADD_CONVO_BEGIN';
 export const ADD_CONVO_SUCCESS = 'ADD_CONVO_SUCCESS';
 export const ADD_CONVO_ERROR = 'ADD_CONVO_ERROR';
+export const ADD_ROOM = 'ADD_ROOM';
 
 export function create_convo(convoContent){
 	return({
@@ -75,6 +76,15 @@ export function reply_convo(convoId, postContent){
 		payload: {
 			convoKey: convoId, 
 			postData: postContent
+		}
+	})
+}
+
+export function add_room(roomContent){
+	return ({
+		type: ADD_ROOM,
+		payload: {
+			room: roomContent
 		}
 	})
 }
