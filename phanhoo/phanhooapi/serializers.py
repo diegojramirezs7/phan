@@ -13,6 +13,15 @@ class ConvoSerializer(serializers.ModelSerializer):
 		# exclude = ['users', 'otherField']
 
 
+class UserSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = User
+
+		fields = '__all__'
+
+
+
 class RoomSerializer(serializers.ModelSerializer):
 
 	class Meta:
@@ -22,6 +31,7 @@ class RoomSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+	convos = ConvoSerializer(many=True, read_only=True)
 
 	class Meta:
 		model = Tag
@@ -29,12 +39,7 @@ class TagSerializer(serializers.ModelSerializer):
 		fields = '__all__'
 
 
-class UserSerializer(serializers.ModelSerializer):
 
-	class Meta:
-		model = User
-
-		fields = '__all__'
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -43,3 +48,4 @@ class PostSerializer(serializers.ModelSerializer):
 		model = Post
 
 		fields = '__all__'
+

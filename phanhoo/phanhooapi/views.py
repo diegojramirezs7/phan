@@ -7,68 +7,8 @@ from .models import *
 from .serializers import *
 import json
 import hashlib
-import random
 
-def save_convo_model(convoDic, user_key):
-	try:
-		# set mainroom, if it doesn't exist create it
-		# other rooms, if they exist add them. Otherwise, create them as well. 
-		current_user = [x for x in User.objects.filter(key=user_key)]
-		mainroom = [x for x in Room.objects.filter(name=convoDic.get('mainroom'))]
-		print(convoDic.get('tags'))
-
-		if current_user and mainroom:
-			hash_input = convoDic.get('title') + str(current_user[0].id) + convoDic.get('content')
-			mainroom = mainroom[0].id
-			model_dic = {
-				'key': hashlib.sha256(hash_input.encode()).hexdigest(),
-				'title': convoDic.get('title'),
-				'author': current_user[0].id,
-				'content': convoDic.get('content'),
-				'mainroom': mainroom,
-				#'tags': convoDic.rooms,
-				'image': '',
-				#followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
-				#upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
-				#downvoters = models.ManyToManyField(User, related_name="downvoters", blank=True)
-				'score': 0,
-				'upvotes': 0,
-				'downvotes': 0
-			}
-			serializer = ConvoSerializer(data=model_dic)
-			if serializer.is_valid():
-				return serializer
-		else:
-			#log
-			return None
-	except Exception as e:
-		#log
-		print(str(e))
-		return None
-
-
-def prepare_client_response(modelSer):
-	if modelSer.is_valid():
-		modelSer.save()
-				
-		response_dic = {
-			'key': serializer.data['key'],
-			'relevantRels': {'created': True},
-			'convoStarter': {
-				'author': serializer.data['author'],
-				'title': serializer.data['title'],
-				'room': serializer.data['mainroom'],
-				'content': serializer.data['content'],
-				'hasImage': not serializer.data['image'] == '',
-				'image': serializer.data['image']
-			},
-			'relatedPosts': {},
-			'convoFooter': {
-				'score': 0,
-				'upvotes': 0,
-				'downvotes': 0,
-			}
-		}
+from .convo_handler import *
 
 
 @api_view(['GET', 'POST'])
@@ -87,13 +27,9 @@ def convos(request):
 			serializer = save_convo_model(convo_received, user_key)
 
 			if serializer:
-				#response_dic = prepare_client_response(serializer)
-				print(serializer)
+				response_dic = prepare_client_response(serializer)
 				
-				return Response("some data", status=status.HTTP_201_CREATED)
-
-				#serializer = ConvoSerializer(data=model_dic)
-				#return Response(response_dic, status=status.HTTP_201_CREATED)
+				return Response(response_dic, status=status.HTTP_201_CREATED)
 			
 
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

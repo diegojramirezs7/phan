@@ -18,12 +18,19 @@ from django.urls import include, path, re_path
 from .views import *
 from phanhooapi import views
 from django.conf.urls import url
+#from rest_framework.routers import DefaultRouter
 
-# the include() functions allows to reference other URLconfs
 """
  Whenever Django encounters include(), it chops off whatever part of the URL matched up to that point 
  and sends the remaining string to the included URLconf for further processing. Otherwise, it maps urls to views.
 """
+
+
+# router = DefaultRouter()
+# router.register(r'api/users', UserViewSet, basename='user')
+# router.register(r'api/authors', AuthorViewSet, basename='author')
+# router.register(r'api/books', BookViewSet, basename='book')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
