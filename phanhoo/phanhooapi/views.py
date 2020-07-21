@@ -17,10 +17,11 @@ def convos(request):
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
 			current_user = User.objects.get(key=user_key)
-			convo = Convo.objects.filter(author=current_user)
-			serializer = ConvoSerializer(convo, context={'request': request}, many=True)
-			response = Response(serializer.data)
-			return response
+			# convo = Convo.objects.filter(author=current_user)
+			results = convo_list(request)
+			# serializer = ConvoSerializer(convo, context={'request': request}, many=True)
+			#response = Response(serializer.data)
+			return Response(results)
 		elif request.method == 'POST':
 			user_key = request.headers.get('User-Key')
 			convo_received = request.data.get('convo')
@@ -28,10 +29,8 @@ def convos(request):
 
 			if serializer:
 				response_dic = prepare_client_response(serializer)
-				
 				return Response(response_dic, status=status.HTTP_201_CREATED)
 			
-
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	except Exception as e:
 		return Response(str(e))
@@ -62,37 +61,6 @@ def convo_details(request):
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['POST', 'GET'])
-def convo_list(request):
-	if request.method == 'GET':
-		user_key = request.headers.get('User-Key')
-		current_user = User.objects.get(key=user_key)
-		convo = Convo.objects.filter(author=current_user)
-		results = []
-		for item in convo:
-			d = {
-				'key': hashlib.sha256(item.key.encode()).hexdigest(),
-				'relevantRels': {'created': True},
-				'convoStarter': {
-					'author': str(item.author),
-					'title': item.title,
-					'room': str(item.mainroom),
-					'content': item.content,
-					'hasImage': True,
-					'image': item.image
-				},
-				'relatedPosts': {},
-				'convoFooter': {
-					'score': item.score,
-					'upvotes': item.upvotes,
-					'downvotes': item.downvotes,
-				}
-			}
-			results.append(d)
-	elif request.method == 'POST':
-		results = []
-
-	return Response(results)
 
 
 @api_view(['GET', 'POST'])
