@@ -10,8 +10,8 @@ function ConvoStarter(props){
 	return (
 		<div className="convoStarter">
 			<Typography style={{fontWeight: 700}}>
-			Started by <Link to="/rooms">{props.header.author} </Link> 
-			under <Link to="/musicaLatina">{props.header.room} </Link>
+			Started by <Link to={props.header.author.url}>{props.header.author.name} </Link> 
+			under <Link to={props.header.room.url}>{props.header.room.name} </Link>
 			</Typography>
 			<Typography style={{fontWeight: 700}}>
 			Conversation: {props.header.title}

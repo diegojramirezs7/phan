@@ -22,13 +22,13 @@ const preloadedState = {
 		score: 7
 	},
 	convos: {
-		'12345': {
-			key: '12345',
+		'zzzzz': {
+			key: 'zzzzz',
 			relevantRels: {},
 			convoStarter: {
 				title: "Katie Boulter is the most heavenly creature on the planet.",
-				author: "Diego Ramirez",
-				room: "Sports",
+				author: {name :"Roger Federed", url: "/roger_federer", key: "111111"},
+				room: {name: "Sports", url: '/sports', key: "300339f"},
 				hasImage: true,
 				image: "https://tennistonic.com/wp-content/uploads/2019/05/Katie-Boulter.jpg",
 				content: "Boulter, who hails from Woodhouse Eaves, has won five singles and four doubles titles on the ITF Women's Circuit." +
@@ -68,8 +68,8 @@ const preloadedState = {
 			relevantRels: {},
 			convoStarter: {
 				title: "Programming is the new poetry.",
-				author: "Diego Ramirez",
-				room: "Technology",
+				author: {name :"Diego Ramirez", url: "/diego_ramirez", key: "999999"},
+				room: {name: "Technology", url: '/technology', key: "86949f"},
 				hasImage: true,
 				image: "https://techcrunch.com/wp-content/uploads/2017/09/gettyimages-484267214.jpg",
 				content: "Programming is the process of creating a set of instructions that tell a computer how to perform a task." +
@@ -165,11 +165,23 @@ const preloadedState = {
 		}
 
 	}
+}
 
+const someState = {
+	currentUser: {
+		key: '111',
+		name: 'Diego Ramirez',
+		score: 7
+	},
+	convos: {},
+	rooms: {},
+	tags: {},
+	people: {},
+	communication: {}
 }
 
 
-var store = createStore(convo_reducer, preloadedState, applyMiddleware(thunk));
+var store = createStore(convo_reducer, someState, applyMiddleware(thunk));
 
 class App extends React.Component {
 	constructor(props){

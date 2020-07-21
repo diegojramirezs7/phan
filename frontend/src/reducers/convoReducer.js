@@ -20,8 +20,8 @@ export default function convo_reducer(state = "", action){
 			return {
 				...state,
 				convos: {
-					...state.convos,
-					[convo_content.key]: convo_content
+					[convo_content.key]: convo_content,
+					...state.convos
 				}
 			}
 		case 'UPVOTE_CONVO':

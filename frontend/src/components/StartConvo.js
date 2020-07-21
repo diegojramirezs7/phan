@@ -263,7 +263,7 @@ class StartConvo extends React.Component {
 	 		}}
 	 	)
 	 	.then(response => {
-	 		//console.log(response['data']);
+	 		console.log(response['data']);
 	 		this.props.dispatch(actions.add_convo_success(response['data']));
 	 	})
     	.catch(error => {
