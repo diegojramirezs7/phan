@@ -17,3 +17,6 @@ The goal is to build a system based on microservices architecture.
 - user list
 
 
+## all objects have CRUD operations
+- the whole design is based on independent CRUD operations for each object
+
