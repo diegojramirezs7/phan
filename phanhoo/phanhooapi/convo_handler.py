@@ -100,7 +100,7 @@ def convo_list(request):
 			results = []
 			for item in convos:
 				d = {
-					'key': hashlib.sha256(item.key.encode()).hexdigest(),
+					'key': item.key,
 					'relevantRels': {'created': True},
 					'convoStarter': {
 						'author': {'name': item.author.name, 'url': item.author.user_url, 'key': item.author.key},

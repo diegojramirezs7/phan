@@ -38,12 +38,21 @@ def convos(request):
 	#return JsonResponse(d)
 
 
-@api_view(['PUT', 'DELETE'])
-def convo_details(request):
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def convo_details(request, convo_key):
 	try:
-		# gets all objects in Convos
-		key = haslib.sha256(request.body.get('key').encode()).hexdigest()
-		convo = Convo.objects.get(pk=pk)
+		print("first stage")
+		if request.method == 'PUT':
+			user_key = request.headers.get('User-Key')
+			print(user_key)
+			current_user = User.objects.get(key=user_key)
+			print(current_user.name)
+			# gets all objects in Convos
+			convo = Convo.objects.get(key=convo_key)
+
+			return Response(convo.content)
 	except Convo.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
 
