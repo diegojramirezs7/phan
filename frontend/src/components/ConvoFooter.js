@@ -12,6 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import * as actions from '../actions/convoActions';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 class ConvoFooter extends React.Component{
 	constructor(props){
@@ -45,7 +46,20 @@ class ConvoFooter extends React.Component{
 
 	handleUpvote(){
 		const convoKey = this.props.convoKey;
-		this.props.dispatch(actions.upvote_convo(convoKey));
+
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			data: "this is a test"
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			console.log(response);
+		}).catch(error => {
+			console.log(error);
+		})
+
+		//this.props.dispatch(actions.upvote_convo(convoKey));
 	}
 
 	handleDownvote(){
