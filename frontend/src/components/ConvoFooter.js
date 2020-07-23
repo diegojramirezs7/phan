@@ -48,7 +48,7 @@ class ConvoFooter extends React.Component{
 		const convoKey = this.props.convoKey;
 
 		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
-			data: "this is a test"
+			command: "upvote"
 		}, {
 			headers: {
 				'User-Key': this.props.user['key']
