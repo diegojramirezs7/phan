@@ -13,9 +13,10 @@ def save_tags(tag_list):
 
 
 def save_convo_model(convoDic, user_key):
+	"""
+	use serializer because many fields need to be created with native python types
+	"""
 	try:
-		# set mainroom, if it doesn't exist create it
-		# other rooms, if they exist add them. Otherwise, create them as well. 
 		current_user = [x for x in User.objects.filter(key=user_key)]
 		mainroom = [x for x in Room.objects.filter(name=convoDic.get('mainroom').strip().lower())]
 		
@@ -61,7 +62,7 @@ def save_convo_model(convoDic, user_key):
 		return None
 
 
-def posted_convo_response(serializer_dic):
+def convo_created_response(serializer_dic):
 	modelSer = serializer_dic.get('serializer')
 	user = serializer_dic.get('user')
 	mainroom = serializer_dic.get('mainroom')
@@ -109,7 +110,8 @@ def get_convo_rels(convo, current_user):
 
 def get_main_convo_posts(convo):
 	try:
-		posts = Post.objects.filter(convo=convo)
+		#posts = Post.objects.filter(convo=convo)
+		posts = convo.posts.all()
 		for item in posts:
 			print(item)
 
@@ -126,7 +128,7 @@ def home_convo_list(current_user):
 		results = []
 		for item in convos:
 			relevantRels = get_convo_rels(item, current_user)
-			convo_posts = get_main_convo_posts(convo)
+			# convo_posts = get_main_convo_posts(convo)
 			d = {
 				'key': item.key,
 				'relevantRels': relevantRels,
@@ -155,44 +157,76 @@ def home_convo_list(current_user):
 
 
 def save_convo_upvote(convo, current_user):
-
+	"""
+	do upvote operation and return convo object
+	"""
 	try:
 		# check if previously upvoted, if yes set to no. If no, set to yes
 		# eliminate downvote
 		# add count
 		
-		#relevantRels = get_convo_rels(convo, current_user)
+		relevantRels = get_convo_rels(convo, current_user)
+		if relevantRels:
+			if relevantRels.get('upvoted'):
+				# if previously upvoted, remove upvote
+				convo.upvoters.remove(current_user)
+			else:
+				# add upvote
+				convo.upvoters.add(current_user)
+				# convo.upvotes = convo.
+			
+			# regardless, remove downvote
+			convo.downvoters.remove(current_user)
+			convo.save()
 
-		get_main_convo_posts(convo)
-		
-		# upvoters = convo.followers.all()
-		# upvoter_ids = [x.id for x in upvoters] + [current_user.id]
-
-		# serializer = ConvoSerializer(convo, data={'upvoters': upvoter_ids}, partial=True)
-		# if serializer.is_valid():
-		# 	serializer.save()
-		# 	serializer_dic = {
-		# 		'serializer': serializer,
-		# 		'user': current_user
-		# 	}
-		# 	return serializer_dic
+		return convo
 	except Exception as e:
+		print(str(e))
+		return None
 
-		return str(e)
 
-
-def convo_upvoted_response(convo, current_user):
+def convo_updated_response(convo, current_user):
 	try:
-		pass
+		relevantRels = get_convo_rels(convo, current_user)
+		d = {
+			'key': convo.key,
+			'relevantRels': relevantRels,
+			'convoStarter': {
+				'author': {'name': convo.author.name, 'url': convo.author.user_url, 'key': convo.author.key},
+				'title': convo.title,
+				'room': {'name': convo.mainroom.name, 'url': convo.mainroom.room_url, 'key': convo.mainroom.key},
+				'content': convo.content,
+				'hasImage': not convo.image == '',
+				'image': convo.image
+			},
+			'relatedPosts': {},
+			'convoFooter': {
+				'score': convo.score,
+				'upvotes': convo.upvoters.all().count(),
+				'downvotes': convo.downvoters.all().count(),
+			}
+		}
+		return d
 	except Exception as e:
 		return str(e)
 
 
-def save_convo_downvote(convo, user_key):
+def save_convo_downvote(convo, current_user):
 	try:
-		pass
+		relevantRels = get_convo_rels(convo, current_user)
+		if relevantRels:
+			if relevantRels.get('downvoted'):
+				convo.downvoters.remove(current_user)
+			else:
+				convo.downvoters.add(current_user)
+
+			convo.upvoters.remove(current_user)
+			convo.save()
+
+		return convo
 	except Exception as e:
-		return str(e)
+		print(str(e))
+		return None
 
 
 def save_convo_reply(convo, user_key, postData):
@@ -202,8 +236,18 @@ def save_convo_reply(convo, user_key, postData):
 		return str(e)
 
 
-def save_convo_followed(request, user_key):
+def save_convo_followed(convo, current_user):
 	try:
-		pass
+		relevantRels = get_convo_rels(convo, current_user)
+		if relevantRels:
+			if relevantRels.get('saved'):
+				convo.followers.remove(current_user)
+			else:
+				convo.followers.add(current_user)
+
+			convo.save()
+
+		return convo
 	except Exception as e:
-		return str(e)
+		print(str(e))
+		return None
