@@ -61,7 +61,7 @@ def save_convo_model(convoDic, user_key):
 		return None
 
 
-def prepare_client_response(serializer_dic):
+def posted_convo_response(serializer_dic):
 	modelSer = serializer_dic.get('serializer')
 	user = serializer_dic.get('user')
 	mainroom = serializer_dic.get('mainroom')
@@ -89,53 +89,121 @@ def prepare_client_response(serializer_dic):
 		return response_dic
 
 
-def convo_list(request):
-	#x = {'name': item.mainroom.name, 'url': item.mainroom.room_url, 'key': item.mainroom.key},
-	if request.method == 'GET':
-		try:
-			user_key = request.headers.get('User-Key')
-			current_user = User.objects.get(key=user_key)
-			#convo = Convo.objects.filter(author=current_user)
-			convos = Convo.objects.all()
-			results = []
-			for item in convos:
-				d = {
-					'key': item.key,
-					'relevantRels': {'created': True},
-					'convoStarter': {
-						'author': {'name': item.author.name, 'url': item.author.user_url, 'key': item.author.key},
-						'title': item.title,
-						'room': {'name': item.mainroom.name, 'url': item.mainroom.room_url, 'key': item.mainroom.key},
-						'content': item.content,
-						'hasImage': not item.image == '',
-						'image': item.image
-					},
-					'relatedPosts': {},
-					'convoFooter': {
-						'score': item.score,
-						'upvotes': item.upvotes,
-						'downvotes': item.downvotes,
-					}
-				}
-				results.append(d)
-		except Exception as e:
-			print(str(e))
-			return str(e)
-	elif request.method == 'POST':
-		results = []
+def get_convo_rels(convo, current_user):
+	try:
+		user_id = current_user.id
+		rels_dic = {
+			'saved': (convo.followers.filter(id=user_id).count() != 0),
+			'upvoted': (convo.upvoters.filter(id=user_id).count() != 0),
+			'downvoted': (convo.downvoters.filter(id=user_id).count() != 0),
+			'created': (convo.author.id == current_user.id)
+		}
 
+		return rels_dic
+	except Exception as e:
+		# log
+		print(str(e))
+		return None
+
+
+
+def get_main_convo_posts(convo):
+	try:
+		posts = Post.objects.filter(convo=convo)
+		for item in posts:
+			print(item)
+
+	except Exception as e:
+		print(str(e))
+		return str(e)
+
+
+
+def home_convo_list(current_user):
+	try:
+		#convo = Convo.objects.filter(author=current_user)
+		convos = Convo.objects.all()
+		results = []
+		for item in convos:
+			relevantRels = get_convo_rels(item, current_user)
+			convo_posts = get_main_convo_posts(convo)
+			d = {
+				'key': item.key,
+				'relevantRels': relevantRels,
+				'convoStarter': {
+					'author': {'name': item.author.name, 'url': item.author.user_url, 'key': item.author.key},
+					'title': item.title,
+					'room': {'name': item.mainroom.name, 'url': item.mainroom.room_url, 'key': item.mainroom.key},
+					'content': item.content,
+					'hasImage': not item.image == '',
+					'image': item.image
+				},
+				'relatedPosts': {},
+				'convoFooter': {
+					'score': item.score,
+					'upvotes': item.upvotes,
+					'downvotes': item.downvotes,
+				}
+			}
+			results.append(d)
+
+	except Exception as e:
+		print(str(e))
+		return str(e)
+	
 	return results
 
 
-"""
-I don't think this needs much explaining, it's just so obvious. 
-Protests reached most countries in the world. 
-Some real changes will occur after this. This is a divisive issue, but it really shouldn't be. 
-I think we can all agree that GF's death was terrible and unfair. 
-However, other suggestions like reparations and such are not really the solution.
-"""
+def save_convo_upvote(convo, current_user):
+
+	try:
+		# check if previously upvoted, if yes set to no. If no, set to yes
+		# eliminate downvote
+		# add count
+		
+		#relevantRels = get_convo_rels(convo, current_user)
+
+		get_main_convo_posts(convo)
+		
+		# upvoters = convo.followers.all()
+		# upvoter_ids = [x.id for x in upvoters] + [current_user.id]
+
+		# serializer = ConvoSerializer(convo, data={'upvoters': upvoter_ids}, partial=True)
+		# if serializer.is_valid():
+		# 	serializer.save()
+		# 	serializer_dic = {
+		# 		'serializer': serializer,
+		# 		'user': current_user
+		# 	}
+		# 	return serializer_dic
+	except Exception as e:
+
+		return str(e)
 
 
+def convo_upvoted_response(convo, current_user):
+	try:
+		pass
+	except Exception as e:
+		return str(e)
 
 
+def save_convo_downvote(convo, user_key):
+	try:
+		pass
+	except Exception as e:
+		return str(e)
 
+
+def save_convo_reply(convo, user_key, postData):
+	try:
+		pass
+	except Exception as e:
+		return str(e)
+
+
+def save_convo_followed(request, user_key):
+	try:
+		pass
+	except Exception as e:
+		return str(e)
