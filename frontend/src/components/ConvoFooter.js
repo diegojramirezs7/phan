@@ -44,9 +44,10 @@ class ConvoFooter extends React.Component{
 		})
 	}
 
+	// methods that contact the server through API
+
 	handleUpvote(){
 		const convoKey = this.props.convoKey;
-
 		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
 			command: "upvote"
 		}, {
@@ -54,7 +55,7 @@ class ConvoFooter extends React.Component{
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
-			console.log(response);
+			this.props.dispatch(actions.upvote_convo(response['data']));
 		}).catch(error => {
 			console.log(error);
 		})
@@ -64,12 +65,32 @@ class ConvoFooter extends React.Component{
 
 	handleDownvote(){
 		const convoKey = this.props.convoKey;
-		this.props.dispatch(actions.downvote_convo(convoKey));
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			command: "downvote"
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			this.props.dispatch(actions.downvote_convo(response['data']));
+		}).catch(error => {
+			console.log(error);
+		})
 	}
 
 	handleSave(e){
 		const convoKey = this.props.convoKey;
-		this.props.dispatch(actions.save_convo(convoKey));
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			command: "save"
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			this.props.dispatch(actions.save_convo(response['data']));
+		}).catch(error => {
+			console.log(error);
+		})
 	}
 
 	handleConvoReply(){
@@ -82,6 +103,8 @@ class ConvoFooter extends React.Component{
 		this.props.dispatch(actions.reply_convo(convoKey, postBody));
 		this.handleToggle();
 	}
+
+	// end of server contacting methods
 
 	render(){
 		const {upvotes, downvotes} = this.props.footer;
