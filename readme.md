@@ -19,4 +19,7 @@ The goal is to build a system based on microservices architecture.
 
 ## all objects have CRUD operations
 - the whole design is based on independent CRUD operations for each object
+- convos are the central object of the web app
+- basically all revolves around convos
+- other objects also have independent operations and define the user interactions
 
