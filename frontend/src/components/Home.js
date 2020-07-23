@@ -18,7 +18,6 @@ class Home extends React.Component{
 		})
 		.then(response => {
 			const convos = response['data'];
-			console.log(convos);
 	 		this.props.dispatch(actions.fetchConvosSuccess(convos));
 		})
 		.catch(error => {
