@@ -2,11 +2,14 @@ from django.http import HttpResponse, Http404, JsonResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
+import sys
+# sys.path.append(".")
 
 from .models import *
 from .serializers import *
 import json
 import hashlib
+
 
 from .convo_handler import *
 
@@ -17,18 +20,20 @@ def convos(request):
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
 			current_user = User.objects.get(key=user_key)
-			# convo = Convo.objects.filter(author=current_user)
-			results = convo_list(request)
+			# convos = Convo.objects.filter(author=current_user)
 			# serializer = ConvoSerializer(convo, context={'request': request}, many=True)
+			
+			results = home_convo_list(current_user)
+			
 			#response = Response(serializer.data)
-			return Response(results)
+			return Response(results, status=status.HTTP_200_OK)
 		elif request.method == 'POST':
 			user_key = request.headers.get('User-Key')
 			convo_received = request.data.get('convo')
 			serializer = save_convo_model(convo_received, user_key)
 
 			if serializer:
-				response_dic = prepare_client_response(serializer)
+				response_dic = posted_convo_response(serializer)
 				return Response(response_dic, status=status.HTTP_201_CREATED)
 			
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,35 +44,39 @@ def convos(request):
 
 
 
-
 @api_view(['GET', 'PUT', 'DELETE'])
 def convo_details(request, convo_key):
 	try:
-		print("first stage")
+		user_key = request.headers.get('User-Key')
+		current_user = User.objects.get(key=user_key)
+		convo = Convo.objects.get(key=convo_key)
 		if request.method == 'PUT':
-			user_key = request.headers.get('User-Key')
-			print(user_key)
-			current_user = User.objects.get(key=user_key)
-			print(current_user.name)
-			# gets all objects in Convos
-			convo = Convo.objects.get(key=convo_key)
+			command = request.data.get('command')
+			if command == 'upvote':
+				save_convo_upvote(convo, current_user)
+			elif command == 'downvote':
+				save_convo_downvote(convo, current_user)
+			elif command == 'reply':
+				postData = request.data.get('postData')
+				save_convo_reply(convo, current_user, postData)
+			elif command == 'save':
+				save_convo_followed(convo, current_user)
 
-			return Response(convo.content)
+			return Response("hello there")
+		elif request.method == 'GET':
+			pass
+			# convo_list
+		elif request.method == 'DELETE':
+			convo.delete()
+			return Response(status=status.HTTP_204_NO_CONTENT)
+			
+
+			return Response("some error")
 	except Convo.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
 
-	if request.method == 'PUT':
-		serializer = StudentSerializer(convo, data=request.data, context={'request': request})
 
-		if serializer.is_valid():
-			serializer.save()
-			return Response(status=status.HTTP_204_NO_CONTENT)
-
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-	elif request.method == 'DELETE':
-		convo.delete()
-		return Response(status=status.HTTP_204_NO_CONTENT)
+	
 
 
 
