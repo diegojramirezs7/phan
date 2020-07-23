@@ -14,32 +14,34 @@ export const ADD_CONVO_SUCCESS = 'ADD_CONVO_SUCCESS';
 export const ADD_CONVO_ERROR = 'ADD_CONVO_ERROR';
 export const ADD_ROOM = 'ADD_ROOM';
 
-export function create_convo(convoContent){
-	return({
-		type: CREATE_CONVO,
-		payload: {
-			convoData: convoContent
-		}
-	})
-}
 
-export function upvote_convo(convoId){
+export function upvote_convo(convoContent){
 	return ({
 		type: UPVOTE_CONVO,
 		payload: {
-			convoKey: convoId
+			convo: convoContent
 		}
 	});
 }
 
-export function downvote_convo(convoId){
+export function downvote_convo(convoContent){
 	return ({
 		type: DOWNVOTE_CONVO,
 		payload: {
-			convoKey: convoId
+			convo: convoContent
 		}
 	})
 }
+
+export function save_convo(convoContent){
+	return ({
+		type: SAVE_CONVO,
+		payload: { 
+			convo: convoContent
+		}
+	})
+}
+
 
 export function upvote_post(convoId, postId){
 	return ({
@@ -61,14 +63,7 @@ export function downvote_post(convoId, postId){
 	})
 }
 
-export function save_convo(convoId){
-	return ({
-		type: SAVE_CONVO,
-		payload: { 
-			convoKey: convoId
-		}
-	})
-}
+
 
 export function reply_convo(convoId, postContent){
 	return({
