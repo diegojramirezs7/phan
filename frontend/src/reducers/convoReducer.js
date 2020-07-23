@@ -3,6 +3,7 @@ export default function convo_reducer(state = "", action){
 	var postKey = "";
 	var upvotes = 0, downvotes = 0;
 	var upvoted = false, downvoted = false;
+	var convo = null;
 	var convo_content = null;
 	switch(action.type){
 		case 'FETCH_CONVOS_SUCCESS':
@@ -25,53 +26,24 @@ export default function convo_reducer(state = "", action){
 				}
 			}
 		case 'UPVOTE_CONVO':
-			upvotes = state.convos[convoKey].convoFooter.upvotes;
-			downvotes = state.convos[convoKey].convoFooter.downvotes;
-			upvoted = state.convos[convoKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relevantRels['downvoted'];
+			convo = action.payload.convo;
 			return {
 				...state,
 				convos: {
 					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							upvoted: !upvoted,
-							downvoted: false,
-						},
-						convoFooter: {
-							...state.convos[convoKey].convoFooter,
-							upvotes: (upvoted)? upvotes - 1: upvotes + 1,
-							downvotes: (downvoted) ? downvotes - 1: downvotes
-						}
-					} 
+					[convo.key]: convo
 				}
 			}
 		case 'DOWNVOTE_CONVO':
-		 	downvotes = state.convos[convoKey].convoFooter.downvotes;
-		 	upvotes = state.convos[convoKey].convoFooter.upvotes;
-		 	upvoted = state.convos[convoKey].relevantRels['upvoted'];
-		 	downvoted = state.convos[convoKey].relevantRels['downvoted'];
+			convo = action.payload.convo;
 			return {
 				...state,
 				convos: {
 					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							upvoted: false,
-							downvoted: !downvoted,
-						},
-						convoFooter: {
-							...state.convos[convoKey].convoFooter,
-							downvotes: (downvoted)? downvotes - 1: downvotes + 1,
-							upvotes: (upvoted)? upvotes - 1: upvotes
-						}
-					}
+					[convo.key]: convo
 				}
 			}
+
 		case 'UPVOTE_POST':
 			postKey = action.payload.postKey;
 			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
@@ -129,17 +101,12 @@ export default function convo_reducer(state = "", action){
 				}
 			}
 		case 'SAVE_CONVO':
+			convo = action.payload.convo;
 			return {
 				...state,
 				convos: {
 					...state.convos,
-					[convoKey]: {
-						...state.convos[convoKey],
-						relevantRels: {
-							...state.convos[convoKey].relevantRels,
-							saved: (state.convos[convoKey].relevantRels.saved)?false : true
-						}
-					}
+					[convo.key]: convo
 				}	
 			}
 		case 'REPLY_CONVO':
