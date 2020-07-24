@@ -24,8 +24,6 @@ def convos(request):
 			# serializer = ConvoSerializer(convo, context={'request': request}, many=True)
 			
 			results = home_convo_list(current_user)
-			
-			#response = Response(serializer.data)
 			return Response(results, status=status.HTTP_200_OK)
 		elif request.method == 'POST':
 			user_key = request.headers.get('User-Key')
@@ -41,7 +39,6 @@ def convos(request):
 		return Response(str(e))
 
 	#return JsonResponse(d)
-
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -66,17 +63,35 @@ def convo_details(request, convo_key):
 						response_dic = convo_updated_response(updated_convo, current_user)
 						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 
-				elif command == 'reply':
-					postData = request.data.get('postData')
-					save_convo_reply(convo, current_user, postData)
 				elif command == 'save':
 					updated_convo = save_convo_followed(convo, current_user)
 					if updated_convo:
 						response_dic = convo_updated_response(updated_convo, current_user)
 						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
+
+				elif command == 'reply':
+					postData = request.data.get('postData')
+					created_post = save_convo_reply(convo, current_user, postData)
+					if created_post:
+						response_dic = post_updated_response(convo, current_user, created_post)
+						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
+
+
+				elif command == 'upvote_post':
+					post_key = request.data.get('postKey')
+					post = Post.objects.get(key=post_key)
+					updated_post = save_post_upvote(post, current_user)
+					if updated_post:
+						response_dic = post_updated_response(post, current_user)
+						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 				
 
-				return Response("wrong command method", status=status.HTTP_401_UNAUTHORIZED)
+				elif command == 'downvote_post':
+					pass
+				
+				
+
+				return Response("wrong command sent", status=status.HTTP_401_UNAUTHORIZED)
 			elif request.method == 'GET':
 				pass
 				# convo_list

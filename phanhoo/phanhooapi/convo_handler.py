@@ -26,6 +26,7 @@ def save_convo_model(convoDic, user_key):
 			hash_input = convoDic.get('title') + str(current_user[0].id) + convoDic.get('content')
 			mainroom = mainroom[0]
 			current_user = current_user[0]
+			
 			model_dic = {
 				'key': hashlib.sha256(hash_input.encode()).hexdigest(),
 				'title': convoDic.get('title'),
@@ -107,7 +108,6 @@ def get_convo_rels(convo, current_user):
 		return None
 
 
-
 def get_main_convo_posts(convo):
 	try:
 		#posts = Post.objects.filter(convo=convo)
@@ -143,8 +143,8 @@ def home_convo_list(current_user):
 				'relatedPosts': {},
 				'convoFooter': {
 					'score': item.score,
-					'upvotes': item.upvotes,
-					'downvotes': item.downvotes,
+					'upvotes': item.upvoters.all().count(),
+					'downvotes': item.downvoters.all().count(),
 				}
 			}
 			results.append(d)
@@ -160,11 +160,7 @@ def save_convo_upvote(convo, current_user):
 	"""
 	do upvote operation and return convo object
 	"""
-	try:
-		# check if previously upvoted, if yes set to no. If no, set to yes
-		# eliminate downvote
-		# add count
-		
+	try:		
 		relevantRels = get_convo_rels(convo, current_user)
 		if relevantRels:
 			if relevantRels.get('upvoted'):
@@ -229,13 +225,6 @@ def save_convo_downvote(convo, current_user):
 		return None
 
 
-def save_convo_reply(convo, user_key, postData):
-	try:
-		pass
-	except Exception as e:
-		return str(e)
-
-
 def save_convo_followed(convo, current_user):
 	try:
 		relevantRels = get_convo_rels(convo, current_user)
@@ -251,3 +240,79 @@ def save_convo_followed(convo, current_user):
 	except Exception as e:
 		print(str(e))
 		return None
+
+
+def save_convo_reply(convo, current_user, postData):
+	try:
+		hash_input = str(current_user.id) + postData.get('title') + postData.get('content')
+		model_dic = {
+			'key': hashlib.sha256(hash_input.encode()).hexdigest(),
+			'author': current_user.id,
+			'title': postData.get('title'),
+			'content': postData.get('content'),
+			'score': 0,
+			'convo': convo.id
+		}
+
+		serializer = PostSerializer(data=model_dic)
+		if serializer.is_valid():
+			serializer.save()
+			post = Post.objects.get(key=serializer.data.get('key'))
+			return post
+
+		return None
+	except Exception as e:
+		print(str(e))
+		return None
+
+
+def get_reply_rels(post, current_user):
+	try:
+		user_id = current_user.id
+		rels_dic = {
+			'upvoted': (post.upvoters.filter(id=user_id).count() != 0),
+			'downvoted': (post.downvoters.filter(id=user_id).count() != 0),
+			'created': (post.author.id == current_user.id)
+		}
+		return rels_dic
+	except Exception as e:
+		# log
+		print(str(e))
+		return None
+
+
+def post_updated_response(created_post, current_user):
+	try:
+		relevantRels = get_reply_rels(created_post, current_user)
+		d = {
+			'key': created_post.key,
+			'relevantRels': relevantRels,
+			'author': {'name': created_post.author.name, 'url': created_post.author.user_url, 'key': created_post.author.key},
+			'title': created_post.title,
+			'content': created_post.content,
+			'upvotes': created_post.upvoters.all().count(),
+			'downvotes': created_post.downvoters.all().count()
+		}
+		return d
+	except Exception as e:
+		print(str(e))
+		return None
+
+
+def save_post_upvote(current_user, post):
+	try:
+		relevantRels = get_reply_rels(post, current_user)
+		if relevantRels.get('upvoted'):
+			post.upvoters.remove(current_user)
+		else:
+			post.upvoters.add(current_user)
+
+		post.downvoters.remove(current_user)
+		post.save()
+
+		return post
+	except Exception as e:
+		print(str(e))
+		return None
+
+

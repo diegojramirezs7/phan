@@ -54,11 +54,8 @@ class Convo(models.Model):
 	tags = models.ManyToManyField(Tag, related_name="tags_convo", blank=True)
 	followers = models.ManyToManyField(User, related_name="follower_convo", blank=True)
 	upvoters = models.ManyToManyField(User, related_name="upvoters_convo", blank=True)
-	downvoters = models.ManyToManyField(User, related_name="downvoters_convo", blank=True)
-	
+	downvoters = models.ManyToManyField(User, related_name="downvoters_convo", blank=True)	
 	score = models.IntegerField(default=0, null=True, blank=True)
-	upvotes = models.IntegerField(default=0, null=True, blank=True)
-	downvotes = models.IntegerField(default=0, null=True, blank=True)
 	
 	def published_recently(self):
 		# if created is greater than yesterday
@@ -74,13 +71,11 @@ class Post(models.Model):
 	title = models.CharField("Title", max_length=240, null=True, blank=True)
 	created = models.DateField("Registration Date", auto_now_add=True)
 	content = models.CharField("content", max_length=2048, blank=True)
-	upvotes = models.IntegerField(default=0, null=True, blank=True)
-	downvotes = models.IntegerField(default=0, null=True, blank=True)
+	upvoters = models.ManyToManyField(User, related_name="upvoters_reply", blank=True)
+	downvoters = models.ManyToManyField(User, related_name="downvoters_reply", blank=True)
 	score = models.IntegerField(default=0, null=True, blank=True)
 	convo = models.ForeignKey(Convo, on_delete=models.CASCADE, null=True, related_name="posts")
 
 	def __str__(self):
 		return self.title
-
-
 
