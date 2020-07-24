@@ -97,10 +97,23 @@ class ConvoFooter extends React.Component{
 		const convoKey = this.props.convoKey;
 		const postBody = {
 			title: this.state.premise,
-			content: this.state.explanation,
-			author: this.props.user.name
+			content: this.state.explanation
 		}
-		this.props.dispatch(actions.reply_convo(convoKey, postBody));
+		
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			command: "reply",
+			postData: postBody
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			console.log(response);
+			this.props.dispatch(actions.reply_convo(convoKey, response['data']));
+		}).catch(error => {
+			console.log(error);
+		})
+
 		this.handleToggle();
 	}
 

@@ -226,10 +226,7 @@ class StartConvo extends React.Component {
 			content: this.state.explanation
 		}
 
-		
-		//this.fetchConvos();
 		var result = this.validateInput();
-		//console.log(result);
 
 		if (result){
 			this.handleToggle();

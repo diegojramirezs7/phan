@@ -113,7 +113,10 @@ export default function convo_reducer(state = "", action){
 			const p_author = action.payload.postData["author"];
 			const p_title = action.payload.postData["title"];
 			const p_content = action.payload.postData["content"];
+			postKey = action.payload.postData['key']
 
+			console.log(postKey)
+			console.log(action.payload.postData)
 			//still need to change it 
 			return {
 				...state,
@@ -123,15 +126,7 @@ export default function convo_reducer(state = "", action){
 						...state.convos[convoKey],
 						relatedPosts: {
 							...state.convos[convoKey].relatedPosts,
-							[p_title]: {
-								key: p_title,
-								author: p_author,
-								title: p_title,
-								content: p_content,
-								relevantRels: {},
-								upvotes: 0,
-								downvotes: 0
-							}
+							[postKey]: action.payload.postData
 						}
 					}
 				}

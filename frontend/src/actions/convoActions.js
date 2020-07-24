@@ -43,6 +43,18 @@ export function save_convo(convoContent){
 }
 
 
+export function reply_convo(convoId, postContent){
+	return({
+		type: REPLY_CONVO,
+		payload: {
+			convoKey: convoId, 
+			postData: postContent
+		}
+	})
+}
+
+
+
 export function upvote_post(convoId, postId){
 	return ({
 		type: UPVOTE_POST,
@@ -65,15 +77,7 @@ export function downvote_post(convoId, postId){
 
 
 
-export function reply_convo(convoId, postContent){
-	return({
-		type: REPLY_CONVO,
-		payload: {
-			convoKey: convoId, 
-			postData: postContent
-		}
-	})
-}
+
 
 export function add_room(roomContent){
 	return ({

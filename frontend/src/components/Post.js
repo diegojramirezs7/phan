@@ -6,12 +6,26 @@ import IconButton from '@material-ui/core/IconButton';
 import {Link} from 'react-router-dom';
 import * as actions from '../actions/convoActions';
 import {connect} from 'react-redux';
+import axios from 'axios';
 
 class Post extends React.Component {
 	//const {author, title, content, upvotes, downvotes} = props.post;
 
 	handleUpvote(){
-		this.props.dispatch(actions.upvote_post(this.props.convoKey, this.props.postKey));
+		//this.props.dispatch(actions.upvote_post(this.props.convoKey, this.props.postKey));
+		const convoKey = this.props.convoKey;
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			command: "upvote_post"
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			//this.props.dispatch(actions.upvote_convo(response['data']));
+			console.log(response);
+		}).catch(error => {
+			console.log(error);
+		})
 	}
 
 	handleDownvote(){
@@ -23,8 +37,8 @@ class Post extends React.Component {
 		return (
 			<div className="col-md-9" >
 				<Typography variant="subtitle2" style={{fontWeight: 700}}>
-					<Link to="#">
-						{this.props.author}
+					<Link to={this.props.author.url}>
+						{this.props.author.name}
 					</Link>
 				</Typography>
 				<Typography style={{fontWeight: 700}}>
