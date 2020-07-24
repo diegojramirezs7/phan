@@ -299,7 +299,7 @@ def post_updated_response(created_post, current_user):
 		return None
 
 
-def save_post_upvote(current_user, post):
+def save_post_upvote(post, current_user):
 	try:
 		relevantRels = get_reply_rels(post, current_user)
 		if relevantRels.get('upvoted'):
@@ -315,4 +315,20 @@ def save_post_upvote(current_user, post):
 		print(str(e))
 		return None
 
+
+def save_post_downvote(post, current_user):
+	try:
+		relevantRels = get_reply_rels(post, current_user)
+		if relevantRels.get('downvoted'):
+			post.downvoters.remove(current_user)
+		else:
+			post.downvoters.add(current_user)
+
+		post.upvoters.remove(current_user)
+		post.save()
+
+		return post
+	except Exception as e:
+		print(str(e))
+		return None
 

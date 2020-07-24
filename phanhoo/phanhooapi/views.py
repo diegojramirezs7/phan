@@ -73,21 +73,26 @@ def convo_details(request, convo_key):
 					postData = request.data.get('postData')
 					created_post = save_convo_reply(convo, current_user, postData)
 					if created_post:
-						response_dic = post_updated_response(convo, current_user, created_post)
+						response_dic = post_updated_response(created_post, current_user)
 						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
-
 
 				elif command == 'upvote_post':
 					post_key = request.data.get('postKey')
 					post = Post.objects.get(key=post_key)
+	
 					updated_post = save_post_upvote(post, current_user)
 					if updated_post:
-						response_dic = post_updated_response(post, current_user)
-						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
-				
+					 	response_dic = post_updated_response(updated_post, current_user)
+					 	return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 
 				elif command == 'downvote_post':
-					pass
+					post_key = request.data.get('postKey')
+					post = Post.objects.get(key=post_key)
+	
+					updated_post = save_post_downvote(post, current_user)
+					if updated_post:
+					 	response_dic = post_updated_response(updated_post, current_user)
+					 	return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 				
 				
 
