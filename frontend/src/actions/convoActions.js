@@ -43,34 +43,34 @@ export function save_convo(convoContent){
 }
 
 
-export function reply_convo(convoId, postContent){
+export function reply_convo(convoId, postData){
 	return({
 		type: REPLY_CONVO,
 		payload: {
 			convoKey: convoId, 
-			postData: postContent
+			post: postData
 		}
 	})
 }
 
 
 
-export function upvote_post(convoId, postId){
+export function upvote_post(convoId, postData){
 	return ({
 		type: UPVOTE_POST,
 		payload: {
 			convoKey: convoId,
-			postKey: postId 
+			post: postData 
 		}
 	})
 }
 
-export function downvote_post(convoId, postId){
+export function downvote_post(convoId, postData){
 	return ({
 		type: DOWNVOTE_POST,
 		payload: { 
 			convoKey: convoId,
-			postKey: postId
+			post: postData
 		}
 	})
 }

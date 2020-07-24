@@ -15,21 +15,34 @@ class Post extends React.Component {
 		//this.props.dispatch(actions.upvote_post(this.props.convoKey, this.props.postKey));
 		const convoKey = this.props.convoKey;
 		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
-			command: "upvote_post"
+			command: "upvote_post",
+			postKey: this.props.postKey
 		}, {
 			headers: {
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
-			//this.props.dispatch(actions.upvote_convo(response['data']));
-			console.log(response);
+			this.props.dispatch(actions.upvote_post(convoKey, response['data']));
 		}).catch(error => {
 			console.log(error);
 		})
 	}
 
 	handleDownvote(){
-		this.props.dispatch(actions.downvote_post(this.props.convoKey, this.props.postKey));
+		const convoKey = this.props.convoKey;
+		axios.put("http://localhost:8000/api/convos/"+ convoKey, {
+			command: "downvote_post",
+			postKey: this.props.postKey
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			this.props.dispatch(actions.downvote_post(convoKey, response['data']));
+		}).catch(error => {
+			console.log(error);
+		})
+		
 	}
 
 	render(){
@@ -64,7 +77,8 @@ class Post extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		convos: state.convos
+		convos: state.convos,
+		user: state.currentUser
 	}
 }
 

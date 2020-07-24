@@ -1,8 +1,6 @@
 export default function convo_reducer(state = "", action){
 	const convoKey = action.payload ? action.payload.convoKey: null;
 	var postKey = "";
-	var upvotes = 0, downvotes = 0;
-	var upvoted = false, downvoted = false;
 	var convo = null;
 	var convo_content = null;
 	switch(action.type){
@@ -45,11 +43,7 @@ export default function convo_reducer(state = "", action){
 			}
 
 		case 'UPVOTE_POST':
-			postKey = action.payload.postKey;
-			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
-			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
-			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
+			postKey = action.payload.post['key']
 			return {
 				...state,
 				convos: {
@@ -58,26 +52,13 @@ export default function convo_reducer(state = "", action){
 						...state.convos[convoKey],
 						relatedPosts: {
 							...state.convos[convoKey].relatedPosts,
-							[postKey]: {
-								...state.convos[convoKey].relatedPosts[postKey],
-								relevantRels: {
-									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
-									downvoted: false,
-									upvoted: !upvoted
-								},
-								upvotes: (upvoted)? upvotes - 1: upvotes + 1,
-								downvotes: (downvoted)? downvotes - 1: downvotes
-							}
+							[postKey]: action.payload.post
 						}
 					}
 				}
 			}
 		case 'DOWNVOTE_POST':
-			postKey = action.payload.postKey;
-			upvotes = state.convos[convoKey].relatedPosts[postKey].upvotes;
-			downvotes = state.convos[convoKey].relatedPosts[postKey].downvotes;
-			upvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['upvoted'];
-			downvoted = state.convos[convoKey].relatedPosts[postKey].relevantRels['downvoted'];
+			postKey = action.payload.post['key'];
 			return {
 				...state,
 				convos: {
@@ -86,16 +67,7 @@ export default function convo_reducer(state = "", action){
 						...state.convos[convoKey],
 						relatedPosts: {
 							...state.convos[convoKey].relatedPosts,
-							[postKey]: {
-								...state.convos[convoKey].relatedPosts[postKey],
-								relevantRels: {
-									...state.convos[convoKey].relatedPosts[postKey].relevantRels,
-									upvoted: false,
-									downvoted: !downvoted
-								},
-								downvotes: (downvoted)? downvotes - 1: downvotes + 1,
-								upvotes: (upvoted)? upvotes - 1: upvotes
-							}
+							[postKey]: action.payload.post
 						}
 					}
 				}
@@ -110,14 +82,8 @@ export default function convo_reducer(state = "", action){
 				}	
 			}
 		case 'REPLY_CONVO':
-			const p_author = action.payload.postData["author"];
-			const p_title = action.payload.postData["title"];
-			const p_content = action.payload.postData["content"];
-			postKey = action.payload.postData['key']
+			postKey = action.payload.post['key']
 
-			console.log(postKey)
-			console.log(action.payload.postData)
-			//still need to change it 
 			return {
 				...state,
 				convos: {
@@ -126,7 +92,7 @@ export default function convo_reducer(state = "", action){
 						...state.convos[convoKey],
 						relatedPosts: {
 							...state.convos[convoKey].relatedPosts,
-							[postKey]: action.payload.postData
+							[postKey]: action.payload.post
 						}
 					}
 				}

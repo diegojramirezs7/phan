@@ -108,7 +108,6 @@ class ConvoFooter extends React.Component{
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
-			console.log(response);
 			this.props.dispatch(actions.reply_convo(convoKey, response['data']));
 		}).catch(error => {
 			console.log(error);
