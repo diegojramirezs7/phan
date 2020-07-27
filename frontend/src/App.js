@@ -203,7 +203,9 @@ class App extends React.Component {
 	render(){
 	  	return (
 		    <Provider store={store} className="App">
-		    	<div onClick={() => this.handleMe()}>See state</div>
+		    	{
+		    		//<div onClick={() => this.handleMe()}>See state</div>	
+		    	}
 		    	<Router>
 		    		<Header />
 					<div>

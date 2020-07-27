@@ -108,6 +108,7 @@ class ConvoFooter extends React.Component{
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
+			
 			this.props.dispatch(actions.reply_convo(convoKey, response['data']));
 		}).catch(error => {
 			console.log(error);
@@ -125,7 +126,7 @@ class ConvoFooter extends React.Component{
 			marginBottom: "2vh"
 		}
 		return (
-			<div className="convoFooter">
+			<div className="convoFooter" style={{paddingTop: "0px"}}>
 				<IconButton size="small" title="save" 
 					style={(convos[convoKey].relevantRels['saved'])?{color: "blue"}:null}
 					onClick={(e) => this.handleSave(e)}>

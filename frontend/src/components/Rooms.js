@@ -1,7 +1,6 @@
 import React from 'react';
-//import RoomCard from './RoomCard';
-//import CreateRoom from './CreateRoom';
-import Grid from '@material-ui/core/Grid';
+import RoomCard from './RoomCard';
+import CreateRoom from './CreateRoom';
 
 class Rooms extends React.Component{
 	
@@ -51,14 +50,12 @@ class Rooms extends React.Component{
 	render(){
 		return (
 			<div className="container content">
-				
-				<Grid container spacing={1}>
-					{this.state.rooms.map(room=>
-						<Grid key={room.key}>
-							{room.title}
-						</Grid>
-					)}
-				</Grid>
+				<CreateRoom />
+				{
+					this.state.rooms.map(room => (
+						<RoomCard key={room.key} room={room} />
+					))
+				}
 			</div>
 		);
 	}

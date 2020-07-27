@@ -9,15 +9,15 @@ import ConvoFooter from './ConvoFooter';
 
 function ConvoCard(props){
 	return (
-		<Card className="convoCard">
-			<CardContent>
+		<Card className="convoCard" >
+			<CardContent className="convo-content" style={{paddingBottom: "4px"}}>
 				<ConvoStarter header={props.convo.convoStarter} convoKey={props.convo.key}/>
 			    <RelatedPosts
 			    	posts={props.convo.relatedPosts} 
 			    	convoKey={props.convo.key}
 				/>
 			</CardContent>
-			<CardActions className="convoFooter">
+			<CardActions className="convoFooter" style={{paddingTop: "0px"}}>
 			    <ConvoFooter footer={props.convo.convoFooter} convoKey={props.convo.key} />
 			</CardActions>
 		

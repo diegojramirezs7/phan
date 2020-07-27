@@ -1,5 +1,5 @@
 body{
-	background-color: #5f5f5f;
+	background-color: #2e3842;;
 }
 
 .conversation{
@@ -14,6 +14,10 @@ body{
   border-style: outset;
 }
 
+.convo-content{
+	padding-bottom: 0px;
+}
+
 .convoStarter{
 	border-bottom: 1px solid black;
 }
@@ -24,9 +28,17 @@ body{
 	max-width: 100%;
 }
 
+.MuiCardActions-root .convoFooter{
+	padding-top: 0px;
+}
+
+
 .convoFooter{
   float: right;
 }
+
+
+
 
 .startConvo{
 	max-width: 50vw;
@@ -55,8 +67,7 @@ body{
 
 .roomCard{
 	display: block;
-	height: 25vh;
-	width: 19vw;
+	width: 50vw;
 	margin-bottom: 1vh;
 	border-style: outset;
 }

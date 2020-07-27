@@ -145,7 +145,7 @@ class Header extends React.Component {
 
     return (
       <div className={classes.grow} >
-        <AppBar position="static" color="inherit" style={{background: "#5f5f5f"}}>
+        <AppBar position="static" color="inherit" style={{background: "#2e3842"}}>
           <Toolbar>
             <Typography variant="h6" noWrap>
                <Link to="/" className="headerLink"> Phanhoo </Link> 
