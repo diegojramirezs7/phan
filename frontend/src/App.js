@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import Home from './components/Home';
+import Rooms from './components/Rooms';
 import Header from './components/Header';
 import {
   BrowserRouter as Router,
@@ -13,7 +14,6 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import convo_reducer from './reducers/convoReducer';
-
 
 const preloadedState = {
 	currentUser: {
@@ -167,6 +167,7 @@ const preloadedState = {
 	}
 }
 
+
 const someState = {
 	currentUser: {
 		key: '111',
@@ -179,7 +180,6 @@ const someState = {
 	people: {},
 	communication: {}
 }
-
 
 var store = createStore(convo_reducer, someState, applyMiddleware(thunk));
 
@@ -211,7 +211,7 @@ class App extends React.Component {
 							<Home />
 						</Route>
 						<Route exact path="/rooms">
-							<div></div>
+							<Rooms />
 						</Route>
 						<Route exact path="/users">
 							<div></div>

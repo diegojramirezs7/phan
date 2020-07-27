@@ -44,7 +44,6 @@ class Rooms extends React.Component{
           			title: "Show Biz",
           		    description: "TV Series, Movies, Celebrities, Influencers and anything related to entertainment."
 				}
-
 			]
 		}
 	}
@@ -55,8 +54,8 @@ class Rooms extends React.Component{
 				
 				<Grid container spacing={1}>
 					{this.state.rooms.map(room=>
-						<Grid key={room.key} item>
-							
+						<Grid key={room.key}>
+							{room.title}
 						</Grid>
 					)}
 				</Grid>
