@@ -2,6 +2,9 @@ from .models import *
 from .serializers import *
 import json
 import hashlib
+import logging
+
+logger = logging.getLogger('mylogger')
 
 def save_tags(tag_list):
 	ls = []
@@ -21,7 +24,6 @@ def save_convo_model(convoDic, user_key):
 		mainroom = [x for x in Room.objects.filter(name=convoDic.get('mainroom').strip().lower())]
 		
 		tags = save_tags(convoDic.get('tags'))
-
 		if current_user and mainroom:
 			hash_input = convoDic.get('title') + str(current_user[0].id) + convoDic.get('content')
 			mainroom = mainroom[0]
@@ -42,6 +44,7 @@ def save_convo_model(convoDic, user_key):
 				'upvotes': 0,
 				'downvotes': 0
 			}
+
 
 			serializer = ConvoSerializer(data=model_dic)
 			if serializer.is_valid():
@@ -268,6 +271,7 @@ def save_convo_reply(convo, current_user, postData):
 
 		serializer = PostSerializer(data=model_dic)
 		if serializer.is_valid():
+			#logger.info("testing logger")
 			serializer.save()
 			post = Post.objects.get(key=serializer.data.get('key'))
 			return post
@@ -296,6 +300,7 @@ def get_reply_rels(post, current_user):
 def post_updated_response(created_post, current_user):
 	try:
 		relevantRels = get_reply_rels(created_post, current_user)
+		print(created_post.content)
 		d = {
 			'key': created_post.key,
 			'relevantRels': relevantRels,
