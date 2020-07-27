@@ -108,12 +108,24 @@ def get_convo_rels(convo, current_user):
 		return None
 
 
-def get_main_convo_posts(convo):
+def get_main_convo_posts(convo, current_user):
 	try:
 		#posts = Post.objects.filter(convo=convo)
 		posts = convo.posts.all()
+		results = {}
 		for item in posts:
-			print(item)
+			relevantRels = get_reply_rels(item, current_user)
+			results[item.key] = {
+				'key': item.key,
+				'author': {'name': item.author.name, 'url': item.author.user_url, 'key': item.author.key},
+				'title': item.title,
+				'content': item.content,
+				'relevantRels': relevantRels,
+				'upvotes': item.upvoters.all().count(),
+				'downvotes': item.downvoters.all().count()
+			}
+
+		return results
 
 	except Exception as e:
 		print(str(e))
@@ -128,7 +140,7 @@ def home_convo_list(current_user):
 		results = []
 		for item in convos:
 			relevantRels = get_convo_rels(item, current_user)
-			# convo_posts = get_main_convo_posts(convo)
+			convo_posts = get_main_convo_posts(item, current_user)
 			d = {
 				'key': item.key,
 				'relevantRels': relevantRels,
@@ -140,7 +152,7 @@ def home_convo_list(current_user):
 					'hasImage': not item.image == '',
 					'image': item.image
 				},
-				'relatedPosts': {},
+				'relatedPosts': convo_posts,
 				'convoFooter': {
 					'score': item.score,
 					'upvotes': item.upvoters.all().count(),
