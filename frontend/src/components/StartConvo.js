@@ -35,18 +35,6 @@ class StartConvo extends React.Component {
 			suggestTags: [],
 			roomValidated: false
 		};
-
-		this.rooms = [
-			{title: "Technology", rank: "3", key: "technology"},
-			{title: "US Politics", rank: "4", key: "uspolitics"},
-			{title: "Soccer", rank: "8", key: "soccer"},
-			{title: "Indie Rock", rank: "5", key: "indierock"},
-			{title: "Canada", rank: "9", key: "canada"},
-			{title: "Literature", rank: "7", key: "literature"},
-			{title: "European Union", rank: "6", key: "eu"},
-			{title: "Quantum Mechanics", rank: "10", key: "quantumMechanics"},
-			{title: "Particle Physics", rank: "10", key: "particlePhysics"}
-		]
 	}
 
 	componentDidMount(){
@@ -288,7 +276,7 @@ class StartConvo extends React.Component {
 		}
 
 		return(
-			 <div className="startConvo">
+			 <div className="col-md-9 startConvo">
     			<Link to="#" style={{display: "flex", alignItems: "center", color: "#5f5f5f",}}>
     				<Avatar>
         				<AccountCircleIcon />
