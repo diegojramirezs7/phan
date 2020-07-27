@@ -126,7 +126,7 @@ class ConvoFooter extends React.Component{
 			marginBottom: "2vh"
 		}
 		return (
-			<div className="convoFooter" style={{paddingTop: "0px"}}>
+			<div className="convoFooter">
 				<IconButton size="small" title="save" 
 					style={(convos[convoKey].relevantRels['saved'])?{color: "blue"}:null}
 					onClick={(e) => this.handleSave(e)}>
