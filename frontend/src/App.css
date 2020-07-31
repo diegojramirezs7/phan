@@ -28,17 +28,9 @@ body{
 	max-width: 100%;
 }
 
-.MuiCardActions-root .convoFooter{
-	padding-top: 0px;
-}
-
-
-.convoFooter{
+.convoFooter, .roomFooter{
   float: right;
 }
-
-
-
 
 .startConvo{
 	max-width: 50vw;
@@ -64,7 +56,6 @@ body{
 	border-bottom: 1px solid black;
 }
 
-
 .roomCard{
 	display: block;
 	width: 50vw;
@@ -80,8 +71,4 @@ body{
 .create-convo-text-field{
 	margin-bottom: 2vh;
 }
-
-
-
-
 

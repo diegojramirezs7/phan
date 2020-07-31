@@ -6,12 +6,11 @@ import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-
-//optional
-import { makeStyles } from '@material-ui/core/styles';
+import * as actions from '../actions/convoActions';
+import {connect} from 'react-redux';
+import axios from 'axios';
 
 
 class CreateRoom extends React.Component {
@@ -32,7 +31,27 @@ class CreateRoom extends React.Component {
 		});
 	}
 
-	shareConvo(){
+	createRoom(){
+		const convoKey = this.props.convoKey;
+		const roomBody = {
+			title: this.state.title,
+			content: this.state.description
+		}
+		
+		axios.put("http://localhost:8000/api/rooms/"+ convoKey, {
+			room: roomBody
+		}, {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		}).then(response => {
+			console.log(response);
+			//this.props.dispatch(actions.reply_convo(convoKey, response['data']));
+		}).catch(error => {
+			console.log(error);
+		})
+
+		this.handleToggle();
 	}
 
 	handleTitleChange(e){
