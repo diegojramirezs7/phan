@@ -4,7 +4,6 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 import sys
 # sys.path.append(".")
-
 from .models import *
 from .serializers import *
 import json
@@ -12,6 +11,25 @@ import hashlib
 from django.db import transaction
 
 from .convo_handler import *
+from .room_handler import * 
+from .user_handler import *
+
+@api_view(['GET', 'POST'])
+def users(request):
+	try:
+		if request.method == 'GET':
+			user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=user_key)
+
+			results = get_main_users(current_user)
+			if results:
+				return Response(results, status=status.HTTP_200_OK)
+
+			return Response("unable to retrieve users", status=status.HTTP_404_NOT_FOUND)
+	except Exception as e:
+		Response(str(e))
+
+
 
 
 @api_view(['GET', 'POST'])
@@ -94,8 +112,6 @@ def convo_details(request, convo_key):
 					 	response_dic = post_updated_response(updated_post, current_user)
 					 	return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 				
-				
-
 				return Response("wrong command sent", status=status.HTTP_401_UNAUTHORIZED)
 			elif request.method == 'GET':
 				pass
@@ -115,28 +131,63 @@ def convo_details(request, convo_key):
 def rooms(request):
 	try:
 		if request.method == 'GET':
+			user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=user_key)
+
 			room_name = request.query_params.get('name')
-			room = [x for x in Room.objects.filter(name=room_name)]
-			if room:
-				room = room[0]
-				response_dic = {
-					'key': room.key,
-					'name': room.name,
-					'relationship': 'suggested',
-					'visitors': 900,
-					'description': room.description
-				}
-				return Response(response_dic, status=status.HTTP_200_OK)
+			if room_name:
+				room = [x for x in Room.objects.filter(name=room_name)]
+				if room:
+					room = room[0]
+					room_dic = room_updated_response(room, current_user)
+					return Response(room_dic, status=status.HTTP_200_OK)
+				else:
+					return Response(data="room doesn't exist, do you want to create it now?", status=status.HTTP_202_ACCEPTED)
 			else:
-				return Response(data="room doesn't exist, do you want to create it now?", status=status.HTTP_202_ACCEPTED)
+				results = main_room_list(current_user)
+				if results:
+					return Response(results, status=status.HTTP_200_OK)
+
 		elif request.method == 'POST':
-			pass
+			user_key = request.headers.get('User-Key')
+			room_received = request.data.get('room')
+
+			room_dic = save_room_model(room_received, user_key)
+			if room_dic:
+				response_dic = room_created_response(room_dic)
+				return Response(response_dic, status=status.HTTP_201_CREATED)
+
+
+			return "something else"
+
 	except Exception as e:
 		print(str(e))
 		return Response(str(e))
 
 
+@api_view(['GET', 'POST', 'PUT'])
+def room_details(request, room_key):
+	try:
+		if request.method == 'GET':
+			pass
+		elif request.method == 'PUT':
+			command = request.data.get('command')
+			user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=user_key)
+			
+			with transaction.atomic():
+				room = Room.objects.select_for_update().get(key=room_key)
+				if command == 'save':
+					updated_room = save_room_followed(room, current_user)
+					if updated_room:
+						response_dic = room_updated_response(updated_room, current_user)
+						return Response(response_dic, status=status.HTTP_202_ACCEPTED)
 
+					return Response("some error")
+
+	except Exception as e:
+		print(str(e))
+		return Response("some error")
 """
 def index(request):
     return HttpResponse("Hello, world. You're at the main api index.")
