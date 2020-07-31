@@ -37,14 +37,10 @@ def save_convo_model(convoDic, user_key):
 				'mainroom': mainroom.id,
 				'tags': [x.id for x in tags],
 				'image': '',
-				#followers = models.ManyToManyField(User, related_name="convo_followers", blank=True)
-				#upvoters = models.ManyToManyField(User, related_name="upvoters", blank=True)
-				#downvoters = models.ManyToManyField(User, related_name="downvoters", blank=True)
 				'score': 0,
 				'upvotes': 0,
 				'downvotes': 0
 			}
-
 
 			serializer = ConvoSerializer(data=model_dic)
 			if serializer.is_valid():
@@ -199,6 +195,7 @@ def save_convo_upvote(convo, current_user):
 def convo_updated_response(convo, current_user):
 	try:
 		relevantRels = get_convo_rels(convo, current_user)
+		convo_posts = get_main_convo_posts(convo, current_user)
 		d = {
 			'key': convo.key,
 			'relevantRels': relevantRels,
@@ -210,7 +207,7 @@ def convo_updated_response(convo, current_user):
 				'hasImage': not convo.image == '',
 				'image': convo.image
 			},
-			'relatedPosts': {},
+			'relatedPosts': convo_posts,
 			'convoFooter': {
 				'score': convo.score,
 				'upvotes': convo.upvoters.all().count(),
@@ -300,7 +297,6 @@ def get_reply_rels(post, current_user):
 def post_updated_response(created_post, current_user):
 	try:
 		relevantRels = get_reply_rels(created_post, current_user)
-		print(created_post.content)
 		d = {
 			'key': created_post.key,
 			'relevantRels': relevantRels,
