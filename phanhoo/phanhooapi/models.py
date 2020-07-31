@@ -49,7 +49,7 @@ class Convo(models.Model):
 	created = models.DateField("Registration Date", auto_now_add=True)
 	image = models.CharField("Image", max_length=256, blank=True)
 	content = models.CharField("Content", max_length=2048, blank=True)
-	mainroom = models.ForeignKey(Room, related_name="main_room", blank=True, null=True, on_delete=models.CASCADE)
+	mainroom = models.ForeignKey(Room, related_name="room_convos", blank=True, null=True, on_delete=models.CASCADE)
 	
 	tags = models.ManyToManyField(Tag, related_name="tags_convo", blank=True)
 	followers = models.ManyToManyField(User, related_name="follower_convo", blank=True)

@@ -100,6 +100,7 @@ def get_convo_rels(convo, current_user):
 			'created': (convo.author.id == current_user.id)
 		}
 
+
 		return rels_dic
 	except Exception as e:
 		# log
@@ -160,11 +161,12 @@ def home_convo_list(current_user):
 			}
 			results.append(d)
 
+		return results
+
 	except Exception as e:
 		print(str(e))
 		return str(e)
 	
-	return results
 
 
 def save_convo_upvote(convo, current_user):
