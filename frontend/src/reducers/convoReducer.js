@@ -3,6 +3,12 @@ export default function convo_reducer(state = "", action){
 	var postKey = "";
 	var convo = null;
 	var convo_content = null;
+	var room = null;
+	var rooms = null;
+	var updatedRooms = null;
+	var users = null;
+	var updatedUsers = null;
+
 	switch(action.type){
 		case 'FETCH_CONVOS_SUCCESS':
 			const convos = action.payload.convos;
@@ -100,21 +106,44 @@ export default function convo_reducer(state = "", action){
 		case 'SET_USER':
 			return state;
 		case 'ADD_ROOM':
-			const room = action.payload.room;
+			room = action.payload.room;
 			return {
 				...state,
 				rooms: {
 					...state.rooms,
-					[room.key]: {
-						key: room.key,
-						relationship: room.relationship,
-						title: room.name,
-						visitors: room.visitors,
-						description: room.description
-					}
+					[room.key]: room
 				}
 			}
-		default: 
+		case 'FETCH_ROOMS_SUCCESS':
+			rooms = action.payload.rooms;
+			updatedRooms = {...state.rooms};
+			rooms.forEach(room => {
+				updatedRooms[room['key']] = room
+			})
+			return {
+				...state,
+				rooms: updatedRooms
+			}
+		case 'SAVE_ROOM':
+			room = action.payload.room;
+			return {
+				...state,
+				rooms: {
+					...state.rooms,
+					[room.key]: room
+				}
+			}
+		case 'FETCH_USERS_SUCCESS':
+			users = action.payload.users;
+			updatedUsers = {...state.people};
+			users.forEach(user => {
+				updatedUsers[user['key']] = user
+			})
+			return {
+				...state,
+				people: updatedUsers
+			}
+		default:
 			return state;
 	}
 }
