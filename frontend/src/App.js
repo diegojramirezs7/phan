@@ -3,6 +3,7 @@ import './App.css';
 import Home from './components/Home';
 import Rooms from './components/Rooms';
 import Header from './components/Header';
+import Users from './components/Users';
 import {
   BrowserRouter as Router,
   //Switch,
@@ -216,6 +217,15 @@ class App extends React.Component {
 							<Rooms />
 						</Route>
 						<Route exact path="/users">
+							<Users />
+						</Route>
+						<Route exact path="/room">
+							<div></div>
+						</Route>
+						<Route exact path="/profile">
+							<div></div>
+						</Route>
+						<Route exact path="/convo">
 							<div></div>
 						</Route>
 					</div>

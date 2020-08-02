@@ -32,13 +32,12 @@ class CreateRoom extends React.Component {
 	}
 
 	createRoom(){
-		const convoKey = this.props.convoKey;
 		const roomBody = {
 			title: this.state.title,
 			content: this.state.description
 		}
 		
-		axios.put("http://localhost:8000/api/rooms/"+ convoKey, {
+		axios.post("http://localhost:8000/api/rooms/", {
 			room: roomBody
 		}, {
 			headers: {
@@ -46,7 +45,7 @@ class CreateRoom extends React.Component {
 			}
 		}).then(response => {
 			console.log(response);
-			//this.props.dispatch(actions.reply_convo(convoKey, response['data']));
+			this.props.dispatch(actions.add_room(response['data']));
 		}).catch(error => {
 			console.log(error);
 		})
@@ -120,7 +119,7 @@ class CreateRoom extends React.Component {
 
 				    </DialogContent>
 				    <DialogActions>
-	          			<Button style={{background: "#5f5f5f", color: "#fff"}} variant="contained">
+	          			<Button style={{background: "#5f5f5f", color: "#fff"}} variant="contained" onClick={() => this.createRoom() }>
 	            			Create
 	          			</Button>
 	       		 	</DialogActions>
@@ -131,4 +130,11 @@ class CreateRoom extends React.Component {
 	}
 }
 
-export default CreateRoom;
+function mapStateToProps(state){
+	return {
+		user: state.currentUser
+	}
+}
+
+
+export default connect(mapStateToProps)(CreateRoom);
