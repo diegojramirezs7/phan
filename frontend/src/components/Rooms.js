@@ -1,6 +1,9 @@
 import React from 'react';
 import RoomCard from './RoomCard';
 import CreateRoom from './CreateRoom';
+import {connect} from 'react-redux';
+import * as actions from '../actions/convoActions';
+import axios from 'axios';
 
 class Rooms extends React.Component{
 	
@@ -47,13 +50,35 @@ class Rooms extends React.Component{
 		}
 	}
 
+	fetchRooms(){
+		axios.get("http://localhost:8000/api/rooms/", {
+			headers: {
+				'User-Key': this.props.user['key']
+			}
+		})
+		.then(response => {
+			const rooms = response['data'];
+			console.log(rooms);
+	 		this.props.dispatch(actions.fetch_rooms_success(rooms));
+		})
+		.catch(error => {
+			console.log(error);
+		})
+	}
+
+	componentDidMount(){
+		this.fetchRooms();
+		console.log(this.props.rooms);
+	}
+
 	render(){
+		const rooms = this.props.rooms;
 		return (
 			<div className="container content">
 				<CreateRoom />
 				{
-					this.state.rooms.map(room => (
-						<RoomCard key={room.key} room={room} />
+					Object.keys(rooms).map(roomKey => (
+						<RoomCard key={roomKey} room={rooms[roomKey]} roomKey={roomKey}/>
 					))
 				}
 			</div>
@@ -62,4 +87,11 @@ class Rooms extends React.Component{
 	
 }
 
-export default Rooms;
+function mapStateToProps(state){
+	return {
+		rooms: state.rooms,
+		user: state.currentUser
+	};
+}
+
+export default connect(mapStateToProps)(Rooms);
