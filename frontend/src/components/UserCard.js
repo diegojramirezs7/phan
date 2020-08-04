@@ -10,18 +10,19 @@ import {connect} from 'react-redux';
 import axios from 'axios';
 import * as actions from '../actions/convoActions';
 
-function RoomCard(props) {
-	const roomKey = props.roomKey;
+function UserCard(props) {
+	const userKey = props.userKey;
 
 	function handleSave(){
-		axios.put("http://localhost:8000/api/users/"+ roomKey, {
+		axios.put("http://localhost:8000/api/users/"+ userKey, {
 			command: "save"
 		}, {
 			headers: {
 				'User-Key': props.user['key']
 			}
 		}).then(response => {
-			props.dispatch(actions.save_room(response['data']));
+			props.dispatch(actions.save_user(response['data']));
+			console.log(response);
 		}).catch(error => {
 			console.log(error);
 		})
@@ -48,6 +49,7 @@ function RoomCard(props) {
 						Score: {props.user.score}
 					</Typography>
 					<IconButton size="small" title="save"  
+						style={(props.users[userKey].relevantRels['saved'])?{color: "blue"}:null}
 						onClick={() => handleSave()}
 					>
 						<BookmarkIcon />
@@ -66,4 +68,4 @@ function mapStateToProps(state){
 }
 
 
-export default connect(mapStateToProps)(RoomCard);
+export default connect(mapStateToProps)(UserCard);
