@@ -16,6 +16,7 @@ export const ADD_ROOM = 'ADD_ROOM';
 export const FETCH_ROOMS_SUCCESS = 'FETCH_ROOMS_SUCCESS';
 export const SAVE_ROOM = 'SAVE_ROOM';
 export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
+export const SAVE_USER = 'SAVE_USER';
 
 
 export function upvote_convo(convoContent){
@@ -112,6 +113,15 @@ export function fetch_users_success(user_list){
 		type: FETCH_USERS_SUCCESS,
 		payload: {
 			users: user_list
+		}
+	})
+}
+
+export function save_user(userContent){
+	return ({
+		type: SAVE_USER,
+		payload: {
+			user: userContent
 		}
 	})
 }
