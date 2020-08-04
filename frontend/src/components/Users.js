@@ -5,11 +5,6 @@ import * as actions from '../actions/convoActions';
 import axios from 'axios';
 
 class Users extends React.Component{
-	
-	constructor(props){
-		super(props);
-	}
-
 	fetchUsers(){
 		axios.get("http://localhost:8000/api/users/", {
 			headers: {
