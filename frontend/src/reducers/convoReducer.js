@@ -6,6 +6,7 @@ export default function convo_reducer(state = "", action){
 	var room = null;
 	var rooms = null;
 	var updatedRooms = null;
+	var user = null;
 	var users = null;
 	var updatedUsers = null;
 
@@ -142,6 +143,15 @@ export default function convo_reducer(state = "", action){
 			return {
 				...state,
 				people: updatedUsers
+			}
+		case 'SAVE_USER':
+			user = action.payload.user;
+			return {
+				...state,
+				people: {
+					...state.people,
+					[user.key]: user
+				}
 			}
 		default:
 			return state;
