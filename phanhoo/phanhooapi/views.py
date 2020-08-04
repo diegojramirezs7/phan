@@ -30,6 +30,26 @@ def users(request):
 		Response(str(e))
 
 
+@api_view(['GET', 'POST', 'PUT', 'DELETE'])
+def user_details(request, user_key):
+	try:
+		if request.method == 'GET':
+			pass
+		elif request.method == 'POST':
+			pass
+		elif request.method == 'PUT':
+			current_user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=current_user_key)
+			user = User.objects.get(key=user_key)
+
+			updated_user = save_user_followed(user, current_user)
+			if updated_user:
+				response_dic = user_updated_response(updated_user, current_user)
+				return Response(response_dic, status=status.HTTP_200_OK)
+
+			return Response('Some other error')
+	except Exception as e:
+		return Response(str(e))
 
 
 @api_view(['GET', 'POST'])
