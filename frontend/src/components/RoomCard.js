@@ -8,7 +8,7 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import * as actions from '../actions/convoActions';
+import * as actions from '../actions/roomActions';
 
 function RoomCard(props) {
 	const roomKey = props.roomKey;
@@ -61,8 +61,8 @@ function RoomCard(props) {
 
 function mapStateToProps(state){
 	return {
-		user: state.currentUser,
-		rooms: state.rooms
+		user: state.user_reducer.currentUser,
+		rooms: state.room_reducer.rooms
 	}
 }
 
