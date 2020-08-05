@@ -1,9 +1,11 @@
 from .serializers import RoomSerializer
 import hashlib
-from .models import Room, User
+from .models import Room, User, Convo
+from .convo_handler import get_convo_rels, get_main_convo_posts
 
 def get_room_rels(room, current_user):
 	try:
+
 		user_id = current_user.id
 		rels_dic = {
 			'saved': (room.followers.filter(id=user_id).count() != 0),
@@ -143,12 +145,45 @@ def room_updated_response(updated_room, current_user):
 		return None
 
 
+def get_room_convos(room, current_user):
+	try:
+		convos = Convo.objects.filter(mainroom = room)
+		results = []
+		for item in convos:
+			relevantRels = get_convo_rels(item, current_user)
+			convo_posts = get_main_convo_posts(item, current_user)
+			d = {
+				'key': item.key,
+				'relevantRels': {},
+				'convoStarter': {
+					'author': {'name': item.author.name, 'url': item.author.user_url, 'key': item.author.key},
+					'title': item.title,
+					'room': {'name': item.mainroom.name, 'url': item.mainroom.room_url, 'key': item.mainroom.key},
+					'content': item.content,
+					'hasImage': not item.image == '',
+					'image': item.image
+				},
+				'relatedPosts': convo_posts,
+				'convoFooter': {
+					'score': item.score,
+					'upvotes': item.upvoters.all().count(),
+					'downvotes': item.downvoters.all().count(),
+				}
+			}
+			results.append(d)
+
+		return results
+	except Exception as e:
+		print(str(e))
+		return None
+
+
 def get_room(name, key=""):
-	pass
-
-
-def get_room_convos(name, key=""):
-	pass
+	try:
+		pass
+	except Exception as e:
+		print(str(e))
+		return None
 
 
 def delete_room(room_dic):

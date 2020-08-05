@@ -189,7 +189,13 @@ def rooms(request):
 def room_details(request, room_key):
 	try:
 		if request.method == 'GET':
-			pass
+			url = '/rooms/'+room_key
+			room = Room.objects.get(room_url=url)
+			user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=user_key)
+			
+			room_convos = get_room_convos(room, current_user)
+			return Response(room_convos, status=status.HTTP_200_OK)
 		elif request.method == 'PUT':
 			command = request.data.get('command')
 			user_key = request.headers.get('User-Key')
