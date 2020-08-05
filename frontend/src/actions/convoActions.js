@@ -126,6 +126,9 @@ export function save_user(userContent){
 	})
 }
 
+
+
+
 // ------------------------------------- TO DO --------------------------------------- //
 export function add_convo_begin(){
 	return ({
@@ -155,14 +158,6 @@ export function fetchConvosBegin(){
 	})
 }
 
-export function fetchConvosSuccess(convoList){
-	return ({
-		type: FETCH_CONVOS_SUCCESS,
-		payload: { 
-			convos: convoList
-		}
-	})
-}
 
 export function fetchConvosError(){
 	return ({
