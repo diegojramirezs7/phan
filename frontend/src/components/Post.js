@@ -77,8 +77,8 @@ class Post extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		convos: state.convos,
-		user: state.currentUser
+		convos: state.convo_reducer.convos,
+		user: state.user_reducer.currentUser
 	}
 }
 
