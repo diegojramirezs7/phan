@@ -61,8 +61,8 @@ function UserCard(props) {
 
 function mapStateToProps(state){
 	return {
-		currentUser: state.currentUser,
-		users: state.people
+		currentUser: state.user_reducer.currentUser,
+		users: state.user_reducer.people
 	}
 }
 
