@@ -3,12 +3,6 @@ export default function convo_reducer(state = "", action){
 	var postKey = "";
 	var convo = null;
 	var convo_content = null;
-	var room = null;
-	var rooms = null;
-	var updatedRooms = null;
-	var user = null;
-	var users = null;
-	var updatedUsers = null;
 
 	switch(action.type){
 		case 'FETCH_CONVOS_SUCCESS':
@@ -102,55 +96,6 @@ export default function convo_reducer(state = "", action){
 							[postKey]: action.payload.post
 						}
 					}
-				}
-			}
-		case 'SET_USER':
-			return state;
-		case 'ADD_ROOM':
-			room = action.payload.room;
-			return {
-				...state,
-				rooms: {
-					...state.rooms,
-					[room.key]: room
-				}
-			}
-		case 'FETCH_ROOMS_SUCCESS':
-			rooms = action.payload.rooms;
-			updatedRooms = {...state.rooms};
-			rooms.forEach(room => {
-				updatedRooms[room['key']] = room
-			})
-			return {
-				...state,
-				rooms: updatedRooms
-			}
-		case 'SAVE_ROOM':
-			room = action.payload.room;
-			return {
-				...state,
-				rooms: {
-					...state.rooms,
-					[room.key]: room
-				}
-			}
-		case 'FETCH_USERS_SUCCESS':
-			users = action.payload.users;
-			updatedUsers = {...state.people};
-			users.forEach(user => {
-				updatedUsers[user['key']] = user
-			})
-			return {
-				...state,
-				people: updatedUsers
-			}
-		case 'SAVE_USER':
-			user = action.payload.user;
-			return {
-				...state,
-				people: {
-					...state.people,
-					[user.key]: user
 				}
 			}
 		default:
