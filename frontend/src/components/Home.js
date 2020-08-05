@@ -42,10 +42,10 @@ class Home extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		conversations: state.convos,
-		rooms: state.rooms,
-		people: state.people,
-		user: state.currentUser
+		conversations: state.convo_reducer.convos,
+		rooms: state.room_reducer.rooms,
+		people: state.user_reducer.people,
+		user: state.user_reducer.currentUser
 	};
 }
 export default connect(mapStateToProps)(Home);
