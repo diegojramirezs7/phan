@@ -1,7 +1,7 @@
 import React from 'react';
 import UserCard from './UserCard';
 import {connect} from 'react-redux';
-import * as actions from '../actions/convoActions';
+import * as actions from '../actions/userActions';
 import axios from 'axios';
 
 class Users extends React.Component{
@@ -41,8 +41,8 @@ class Users extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		users: state.people,
-		user: state.currentUser
+		users: state.user_reducer.people,
+		user: state.user_reducer.currentUser
 	};
 }
 
