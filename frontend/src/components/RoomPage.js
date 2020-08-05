@@ -21,7 +21,7 @@ function RoomPage(props){
     			}
     		}).then(response => {
     			//console.log(response['data']);
-    			props.dispatch(actions.fetch_convos_success(response['data']));
+    			props.dispatch(actions.fetch_room_convos_success(response['data']));
     		}).catch(error => {
     			console.log(error);
     		})
@@ -54,8 +54,8 @@ function RoomPage(props){
 
 function mapStateToProps(state){
 	return {
-		conversations: state.convos,
-		user: state.currentUser
+		conversations: state.convo_reducer.convos,
+		user: state.user_reducer.currentUser
 	};
 }
 
