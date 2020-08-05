@@ -44,7 +44,6 @@ class CreateRoom extends React.Component {
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
-			console.log(response);
 			this.props.dispatch(actions.add_room(response['data']));
 		}).catch(error => {
 			console.log(error);

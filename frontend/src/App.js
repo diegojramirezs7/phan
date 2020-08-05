@@ -4,12 +4,15 @@ import Home from './components/Home';
 import Rooms from './components/Rooms';
 import Header from './components/Header';
 import Users from './components/Users';
+import ConvoPage from './components/ConvoPage';
+import RoomPage from './components/RoomPage';
 import {
   BrowserRouter as Router,
   //Switch,
   Route
   //Link
 } from "react-router-dom";
+
 //import axios from 'axios';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
@@ -219,14 +222,11 @@ class App extends React.Component {
 						<Route exact path="/users">
 							<Users />
 						</Route>
-						<Route exact path="/room">
-							<div></div>
+						<Route path="/convos/:convo_url">
+							<ConvoPage />
 						</Route>
-						<Route exact path="/profile">
-							<div></div>
-						</Route>
-						<Route exact path="/convo">
-							<div></div>
+						<Route path="/rooms/:room_url">
+							<RoomPage />
 						</Route>
 					</div>
 				</Router>

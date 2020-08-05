@@ -25,16 +25,11 @@ class Home extends React.Component{
 		})
 	}
 
-	handleMe(){
-		this.props.dispatch(actions.upvote_convo());
-	}
-
 	render(){
 		const conversations = this.props.conversations;
 		return (
 			<div className="container content">
 				<StartConvo />
-
 				{
 					Object.keys(conversations).map(conversationId => (
 						<ConvoCard key={conversationId} convo={conversations[conversationId]} />

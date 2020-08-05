@@ -22,7 +22,6 @@ function UserCard(props) {
 			}
 		}).then(response => {
 			props.dispatch(actions.save_user(response['data']));
-			console.log(response);
 		}).catch(error => {
 			console.log(error);
 		})

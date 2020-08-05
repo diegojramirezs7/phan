@@ -158,6 +158,14 @@ export function fetchConvosBegin(){
 	})
 }
 
+export function fetchConvosSuccess(convoList){
+	return ({
+		type: FETCH_CONVOS_SUCCESS,
+		payload: { 
+			convos: convoList
+		}
+	})
+}
 
 export function fetchConvosError(){
 	return ({

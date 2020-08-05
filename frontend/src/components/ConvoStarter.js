@@ -10,12 +10,12 @@ function ConvoStarter(props){
 	return (
 		<div className="convoStarter">
 			<Typography style={{fontWeight: 700}}>
-			Started by <Link to={props.header.author.url}>{props.header.author.name} </Link> 
-			under <Link to={props.header.room.url}>{props.header.room.name} </Link>
+				Started by <Link to={props.header.author.url}>{props.header.author.name} </Link> 
+				under <Link to={props.header.room.url}>{props.header.room.name} </Link>
 			</Typography>
-			<Typography style={{fontWeight: 700}}>
+			<h5>
 			Conversation: {props.header.title}
-			</Typography>
+			</h5>
 
 			<img 
 				src={props.header.image} 
