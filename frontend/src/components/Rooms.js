@@ -2,7 +2,7 @@ import React from 'react';
 import RoomCard from './RoomCard';
 import CreateRoom from './CreateRoom';
 import {connect} from 'react-redux';
-import * as actions from '../actions/convoActions';
+import * as actions from '../actions/roomActions';
 import axios from 'axios';
 
 class Rooms extends React.Component{
@@ -43,8 +43,8 @@ class Rooms extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		rooms: state.rooms,
-		user: state.currentUser
+		rooms: state.room_reducer.rooms,
+		user: state.user_reducer.currentUser
 	};
 }
 
