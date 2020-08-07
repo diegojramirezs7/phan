@@ -195,7 +195,13 @@ def room_details(request, room_key):
 			current_user = User.objects.get(key=user_key)
 			
 			room_convos = get_room_convos(room, current_user)
-			return Response(room_convos, status=status.HTTP_200_OK)
+			room_dic = room_updated_response(room, current_user)
+			response_dic = {
+				'room': room_dic,
+				'convos': room_convos
+			}
+
+			return Response(response_dic, status=status.HTTP_200_OK)
 		elif request.method == 'PUT':
 			command = request.data.get('command')
 			user_key = request.headers.get('User-Key')
