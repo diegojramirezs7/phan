@@ -9,6 +9,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import axios from 'axios';
 import * as actions from '../actions/roomActions';
+import {capitalize} from '../helpers/stringManipulation';
 
 function RoomCard(props) {
 	const roomKey = props.roomKey;
@@ -32,7 +33,9 @@ function RoomCard(props) {
 		<Card className="roomCard">
 			<CardContent>
 				<Link to={props.room.url}>
-					<h4>{props.room.title}</h4>
+					<h4>
+					{capitalize(props.room.title)}
+					</h4>
 				</Link>
 				<Typography  variant="body1" component="p">
 				{props.room.description}

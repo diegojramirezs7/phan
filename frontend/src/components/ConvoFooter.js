@@ -191,8 +191,8 @@ class ConvoFooter extends React.Component{
 
 function mapStateToProps(state){
 	return {
-		user: state.currentUser,
-		convos: state.convos
+		user: state.user_reducer.currentUser,
+		convos: state.convo_reducer.convos
 	}
 }
 

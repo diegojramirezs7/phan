@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
+import {capitalize} from '../helpers/stringManipulation';
 
 function ConvoStarter(props){
 	const imageStyle = {
@@ -11,7 +12,7 @@ function ConvoStarter(props){
 		<div className="convoStarter">
 			<Typography style={{fontWeight: 700}}>
 				Started by <Link to={props.header.author.url}>{props.header.author.name} </Link> 
-				under <Link to={props.header.room.url}>{props.header.room.name} </Link>
+				under <Link to={props.header.room.url}>{ capitalize(props.header.room.name)} </Link>
 			</Typography>
 			<h5>
 			Conversation: {props.header.title}

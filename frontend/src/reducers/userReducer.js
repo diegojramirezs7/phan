@@ -1,3 +1,7 @@
+
+
+
+
 export default function room_reducer(state="", action){
 	var user = null;
 	var users = null;

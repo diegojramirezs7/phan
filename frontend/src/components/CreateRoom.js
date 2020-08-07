@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import * as actions from '../actions/convoActions';
+import {add_room} from '../actions/roomActions';
 import {connect} from 'react-redux';
 import axios from 'axios';
 
@@ -44,7 +44,7 @@ class CreateRoom extends React.Component {
 				'User-Key': this.props.user['key']
 			}
 		}).then(response => {
-			this.props.dispatch(actions.add_room(response['data']));
+			this.props.dispatch(add_room(response['data']));
 		}).catch(error => {
 			console.log(error);
 		})
@@ -131,7 +131,7 @@ class CreateRoom extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		user: state.currentUser
+		user: state.user_reducer.currentUser
 	}
 }
 

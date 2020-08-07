@@ -4,16 +4,6 @@ export default function room_reducer(state="", action){
 	var updatedRooms = null;
 
 	switch (action.type){
-		case 'FETCH_ROOM_CONVOS_SUCCESS':
-			const newConvos = action.payload.convos;
-			const updatedConvos = {...state.convos};
-			newConvos.forEach(convo => {
-				updatedConvos[convo['key']] = convo
-			})
-			return {
-				...state,
-				convos: updatedConvos
-			}
 		case 'ADD_ROOM':
 			room = action.payload.room;
 			return {

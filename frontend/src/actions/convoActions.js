@@ -12,11 +12,7 @@ export const FETCH_CONVOS_ERROR = 'FETCH_CONVOS_ERROR';
 export const ADD_CONVO_BEGIN = 'ADD_CONVO_BEGIN';
 export const ADD_CONVO_SUCCESS = 'ADD_CONVO_SUCCESS';
 export const ADD_CONVO_ERROR = 'ADD_CONVO_ERROR';
-export const ADD_ROOM = 'ADD_ROOM';
-export const FETCH_ROOMS_SUCCESS = 'FETCH_ROOMS_SUCCESS';
-export const SAVE_ROOM = 'SAVE_ROOM';
-export const FETCH_USERS_SUCCESS = 'FETCH_USERS_SUCCESS';
-export const SAVE_USER = 'SAVE_USER';
+
 
 
 export function upvote_convo(convoContent){
@@ -78,54 +74,6 @@ export function downvote_post(convoId, postData){
 		}
 	})
 }
-
-
-export function add_room(roomContent){
-	return ({
-		type: ADD_ROOM,
-		payload: {
-			room: roomContent
-		}
-	})
-}
-
-
-export function fetch_rooms_success(room_list){
-	return ({ 
-		type: FETCH_ROOMS_SUCCESS,
-		payload: {
-			rooms: room_list
-		}
-	})
-}
-
-export function save_room(roomContent){
-	return ({
-		type: SAVE_ROOM,
-		payload: {
-			room: roomContent
-		}
-	})
-}
-
-export function fetch_users_success(user_list){
-	return ({
-		type: FETCH_USERS_SUCCESS,
-		payload: {
-			users: user_list
-		}
-	})
-}
-
-export function save_user(userContent){
-	return ({
-		type: SAVE_USER,
-		payload: {
-			user: userContent
-		}
-	})
-}
-
 
 
 

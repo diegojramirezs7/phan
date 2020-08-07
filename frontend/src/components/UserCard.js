@@ -8,7 +8,7 @@ import BookmarkIcon from '@material-ui/icons/Bookmark';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import axios from 'axios';
-import * as actions from '../actions/convoActions';
+import * as actions from '../actions/userActions';
 
 function UserCard(props) {
 	const userKey = props.userKey;

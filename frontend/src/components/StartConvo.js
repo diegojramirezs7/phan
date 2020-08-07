@@ -14,7 +14,8 @@ import Chip from '@material-ui/core/Chip';
 import CameraAltIcon from '@material-ui/icons/CameraAlt';
 import IconButton from '@material-ui/core/IconButton';
 import {connect} from 'react-redux';
-import * as actions from '../actions/convoActions';
+import * as convo_actions from '../actions/convoActions';
+import * as room_actions from '../actions/roomActions';
 import axios from 'axios';
 
 
@@ -171,7 +172,7 @@ class StartConvo extends React.Component {
 			})
 			.then(response => {
 				if (response['status'] === 200){
-					this.props.dispatch(actions.add_room(response['data']))
+					this.props.dispatch(room_actions.add_room(response['data']))
 					this.addRoomSuggestions();
 					this.setState({
 						error: "",
@@ -202,7 +203,6 @@ class StartConvo extends React.Component {
 	// -------------------- Fetching and Updating (API interaction) ------------------- //
 
 	shareConvo(){
-		//this.props(dispatch(actions.add_convo_begin()))
 		const convoContent = {
 			userKey: this.props.user['key'],
 			title: this.state.premise,
@@ -230,7 +230,7 @@ class StartConvo extends React.Component {
 		})
 		.then(response => {
 			const convos = response['data'];
-	 		this.props.dispatch(actions.fetchConvosSuccess(convos));
+	 		this.props.dispatch(convo_actions.fetchConvosSuccess(convos));
 		})
 		.catch(error => {
 			console.log(error);
@@ -248,7 +248,7 @@ class StartConvo extends React.Component {
 	 		}}
 	 	)
 	 	.then(response => {
-	 		this.props.dispatch(actions.add_convo_success(response['data']));
+	 		this.props.dispatch(convo_actions.add_convo_success(response['data']));
 	 	})
     	.catch(error => {
     		//this.props.resetState();
@@ -380,9 +380,9 @@ class StartConvo extends React.Component {
 
 function mapStateToProps(state){
 	return {
-		user: state.currentUser,
-		rooms: state.rooms,
-		tags: state.tags
+		user: state.user_reducer.currentUser,
+		rooms: state.room_reducer.rooms,
+		tags: state.convo_reducer.tags
 	}
 }
 

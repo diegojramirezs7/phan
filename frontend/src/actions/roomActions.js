@@ -1,11 +1,11 @@
-export const FETCH_ROOM_CONVOS_SUCCESS = 'FETCH_ROOM_CONVOS_SUCCESS';
+export const FETCH_CONVOS_SUCCESS = 'FETCH_CONVOS_SUCCESS';
 export const ADD_ROOM = 'ADD_ROOM';
 export const FETCH_ROOMS_SUCCESS = 'FETCH_ROOMS_SUCCESS';
 export const SAVE_ROOM = 'SAVE_ROOM';
 
-export function fetch_room_convos_success(convo_list){
+export function fetch_convos_success(convo_list){
 	return ({
-		type: FETCH_ROOM_CONVOS_SUCCESS,
+		type: FETCH_CONVOS_SUCCESS,
 		payload: {
 			convos: convo_list
 		}

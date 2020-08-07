@@ -54,12 +54,11 @@ class App extends React.Component {
 	}
 
 	render(){
-		console.log(store.getState());
 	  	return (
 		    <Provider store={store} className="App">
-		    	{
-		    		//<div onClick={() => this.handleMe()}>See state</div>	
-		    	}
+		    	
+		    		<div onClick={() => this.handleMe()}>See state</div>	
+		    	
 		    	<Router>
 		    		<Header />
 					<div>
