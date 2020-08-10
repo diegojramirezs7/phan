@@ -6,6 +6,8 @@ import Header from './components/Header';
 import Users from './components/Users';
 import ConvoPage from './components/ConvoPage';
 import RoomPage from './components/RoomPage';
+import UserPage from './components/UserPage';
+
 import { BrowserRouter as Router, Route } from "react-router-dom";
 //import axios from 'axios';
 import { createStore, applyMiddleware } from 'redux';
@@ -76,6 +78,9 @@ class App extends React.Component {
 						</Route>
 						<Route path="/rooms/:room_url">
 							<RoomPage />
+						</Route>
+						<Route path="/users/:user_url">
+							<UserPage />
 						</Route>
 					</div>
 				</Router>
