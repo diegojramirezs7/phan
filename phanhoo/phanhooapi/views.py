@@ -14,8 +14,28 @@ from .convo_handler import *
 from .room_handler import * 
 from .user_handler import *
 
+
+@api_view(['GET'])
+def user(request, user_url):
+	try:
+		if request.method == 'GET':
+			user_key = request.headers.get('User-Key')
+			current_user = User.objects.get(key=user_key)
+			
+			user_url = '/users/{}'.format(user_url)
+			requested_user = User.objects.get(user_url = user_url)
+
+			return Response(requested_user.bio)
+
+
+	except Exception as e:
+		print(str(e))
+		return Response(str(e))
+
+
 @api_view(['GET', 'POST'])
 def users(request):
+	# get list of users or add new user
 	try:
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
@@ -50,6 +70,14 @@ def user_details(request, user_key):
 			return Response('Some other error')
 	except Exception as e:
 		return Response(str(e))
+
+
+@api_view(['GET'])
+def convo(request):
+	try:
+		pass
+	except Exception as e:
+		return str(e)
 
 
 @api_view(['GET', 'POST'])
@@ -145,6 +173,14 @@ def convo_details(request, convo_key):
 	except Convo.DoesNotExist:
 		return Response(status=status.HTTP_404_NOT_FOUND)
 
+
+@api_view(['GET'])
+def room(request):
+	try:
+		pass
+	except Exception as e:
+		print(str(e))
+		return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET', 'POST'])

@@ -8,6 +8,7 @@ class User(models.Model):
 	key = models.CharField("Key", max_length=256)
 	name = models.CharField("Name", max_length=100)
 	user_url = models.CharField("URL", max_length=256, null=True, blank=True)
+	email = models.CharField("Email", max_length=256, null=True, blank=True)
 	joined = models.DateField("Registration Date", auto_now_add=True)
 	bio = models.CharField("Bio", max_length=4096, null=True, blank=True)
 	score = models.IntegerField(default=0, null=True, blank=True)
