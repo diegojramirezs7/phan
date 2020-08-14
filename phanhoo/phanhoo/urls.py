@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path, re_path
-from .views import *
-from phanhooapi import views
 from django.conf.urls import url
 #from rest_framework.routers import DefaultRouter
 

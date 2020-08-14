@@ -6,9 +6,9 @@ class ConvoSerializer(serializers.ModelSerializer):
 	class Meta:
 		# defines metadata that our model has and that must be converted to Convo class
 		model = Convo
-		# fields = ('key', 'title', 'author', 'image', 'content', 
-		# 	'rooms', 'posts', 'followers', 'score', 'upvotes', 'downvotes')
-
+		
+		# when __all__ is used, all fields have to specified on instantiation
+		# the only fields that can be left out are many to many fields and the ones that have default
 		fields = '__all__'
 		# exclude = ['users', 'otherField']
 
@@ -37,9 +37,6 @@ class TagSerializer(serializers.ModelSerializer):
 		model = Tag
 
 		fields = '__all__'
-
-
-
 
 
 class PostSerializer(serializers.ModelSerializer):

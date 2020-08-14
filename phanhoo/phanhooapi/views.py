@@ -25,6 +25,8 @@ def user(request, user_url):
 			user_url = '/users/{}'.format(user_url)
 			requested_user = User.objects.get(user_url = user_url)
 
+			user_dic = updated_user_response(requested_user, current_user)
+
 			return Response(requested_user.bio)
 
 
@@ -46,6 +48,8 @@ def users(request):
 				return Response(results, status=status.HTTP_200_OK)
 
 			return Response("unable to retrieve users", status=status.HTTP_404_NOT_FOUND)
+		else:
+			return Response("unauthorized method")
 	except Exception as e:
 		Response(str(e))
 
@@ -256,37 +260,3 @@ def room_details(request, room_key):
 	except Exception as e:
 		print(str(e))
 		return Response("some error")
-"""
-def index(request):
-    return HttpResponse("Hello, world. You're at the main api index.")
-
-def convos(request):
-	latest_convos_list = Convo.objects.order_by('-created')[:5]
-	output = ', '.join([c.title for q in latest_convos_list])
-	template = loader.get_template('phanhooapi/index.html')
-	context = {
-		'convo_list': "latest_convos_list"
-	}
-	return HttpResponse(template.render(context, request))
-
-def convos2(request):
-	latest_convos_list = Convo.objects.order_by('-created')[:5]
-	output = ', '.join([c.title for q in latest_convos_list])
-	context = {
-		'convo_list': output
-	}
-	return render(request, 'phanhooapi/index.html', context)
-
-def convos_api_traditional(request):
-	convos = Convos.objects.all()
-	d = {
-		'author': str(convo[0].author),
-		'title': convo[0].title,
-		'content': convo[0].content, 
-		'score': convo[0].score,
-		'upvotes': convo[0].upvotes,
-		'downvotes': convo[0].downvotes
-	}
-	return JsonResonse(d)
-
-"""
