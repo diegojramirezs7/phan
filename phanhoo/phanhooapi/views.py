@@ -21,13 +21,13 @@ def user(request, user_url):
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
 			current_user = User.objects.get(key=user_key)
-			
+
 			user_url = '/users/{}'.format(user_url)
 			requested_user = User.objects.get(user_url = user_url)
 
-			user_dic = updated_user_response(requested_user, current_user)
+			user_dic = user_updated_response(requested_user, current_user)
 
-			return Response(requested_user.bio)
+			return Response(user_dic, status=status.HTTP_200_OK)
 
 
 	except Exception as e:
