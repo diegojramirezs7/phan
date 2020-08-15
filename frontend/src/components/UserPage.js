@@ -21,7 +21,7 @@ function UserPage(props){
     				'User-Key': user['key']
     			}
     		}).then(response => {
-    			console.log(response);
+    			console.log(response['data']);
     			//dispatch(fetch_convos_success(response.data.convos));
     			//dispatch(save_user(response.data.room));
     		}).catch(error => {
