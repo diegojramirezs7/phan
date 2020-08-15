@@ -9,7 +9,7 @@ This new frontend is a standalone app fetching data from different APIs, rather 
 The goal is to build a system based on microservices architecture. 
 
 ## One microservice for each main feature
-- content suggestion
+- content suggestion (user, convos, rooms)
 - notification system
 - messaging system
 - convo lists
