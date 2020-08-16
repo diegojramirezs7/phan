@@ -15,6 +15,13 @@ from .room_handler import *
 from .user_handler import *
 
 
+def validate():
+	pass
+
+def suggest():
+	pass
+
+
 @api_view(['GET'])
 def user(request, user_url):
 	try:
@@ -91,7 +98,6 @@ def convos(request):
 			user_key = request.headers.get('User-Key')
 			current_user = User.objects.get(key=user_key)
 			author = request.query_params.get('author')
-			print("author")
 
 			results = home_convo_list(current_user)
 			return Response(results, status=status.HTTP_200_OK)
