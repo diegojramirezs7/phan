@@ -90,9 +90,9 @@ def convos(request):
 		if request.method == 'GET':
 			user_key = request.headers.get('User-Key')
 			current_user = User.objects.get(key=user_key)
-			# convos = Convo.objects.filter(author=current_user)
-			# serializer = ConvoSerializer(convo, context={'request': request}, many=True)
-			
+			author = request.query_params.get('author')
+			print("author")
+
 			results = home_convo_list(current_user)
 			return Response(results, status=status.HTTP_200_OK)
 		elif request.method == 'POST':
