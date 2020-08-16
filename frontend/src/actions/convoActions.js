@@ -14,7 +14,6 @@ export const ADD_CONVO_SUCCESS = 'ADD_CONVO_SUCCESS';
 export const ADD_CONVO_ERROR = 'ADD_CONVO_ERROR';
 
 
-
 export function upvote_convo(convoContent){
 	return ({
 		type: UPVOTE_CONVO,
