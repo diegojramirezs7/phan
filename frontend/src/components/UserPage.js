@@ -5,7 +5,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ConvoCard from './ConvoCard';
 import {save_user} from '../actions/userActions';
-import {fetch_convos_success} from '../actions/convoActions';
+import {fetchConvosSuccess} from '../actions/convoActions';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import {capitalize} from '../helpers/stringManipulation';
@@ -15,7 +15,7 @@ function UserPage(props){
 	const {conversations, user, dispatch} = props;
 
 	useLayoutEffect(() => {
-		async function fetchData(){
+		async function fetchUser(){
     		axios.get(`http://localhost:8000/api/user/${user_url}`, {
     			headers: {
     				'User-Key': user['key']
@@ -23,14 +23,32 @@ function UserPage(props){
     		}).then(response => {
     			console.log(response['data']);
     			//dispatch(fetch_convos_success(response.data.convos));
-    			//dispatch(save_user(response.data.room));
+    			//
+    			dispatch(save_user(response.data));
     		}).catch(error => {
     			console.log(error);
     		})
 		}
 		
-		fetchData();
-	}, [user, dispatch, user_url])
+		fetchUser();
+	}, [user, dispatch, user_url]);
+
+
+	useLayoutEffect(() => {
+		async function fetchConvos(){
+			axios.get(`http://localhost:8000/api/convos?author=${user.key}`, {
+				headers: {
+					'User-Key': user['key']
+				}
+			}).then(response => {
+				dispatch(fetchConvosSuccess(response.data));
+			}).catch(error => {
+				console.log(error);
+			})
+		}
+
+		fetchConvos();
+	}, [user, dispatch])
 
 	return (
 		<div className="container content">
@@ -41,12 +59,13 @@ function UserPage(props){
 							Object.keys(props.users).filter(userId => props.users[userId].url === `/users/${user_url}`)
 							.map(userId => (
 								capitalize(props.users[userId].name)
+
 							))
 						}
 					</h2>
 					<p>
 						{
-							Object.keys(props.users).filter(userId => props.users[userId].url === `/rooms/${user_url}`)
+							Object.keys(props.users).filter(userId => props.users[userId].url === `/users/${user_url}`)
 							.map(userId => (
 								props.users[userId].bio
 							))
