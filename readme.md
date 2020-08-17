@@ -15,6 +15,7 @@ The goal is to build a system based on microservices architecture.
 - convo lists
 - room list
 - user list
+- content suggestions
 
 
 ## all objects have CRUD operations
