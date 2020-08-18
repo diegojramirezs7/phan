@@ -75,9 +75,24 @@ def user_updated_response(user, current_user):
 
 
 
+def suggest_users():
+	try:
+		pass
+	except Exception as e:
+		print(str(e))
+		return None
 
 
+def get_followers(current_user):
+	try:
+		followers = User.objects.filter(followers__id = current_user.id)
+	except Exception as e:
+		print(str(e))
+		return None
 
+def get_following(current_user):
+	try:
+		followers = User.objects.filter(following__id = current_user.id)
 
 
 
