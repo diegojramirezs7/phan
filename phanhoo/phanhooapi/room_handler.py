@@ -186,6 +186,19 @@ def get_room(name, key=""):
 		return None
 
 
+def get_rooms_saved(current_user):
+	try:
+		rooms = Room.objects.filter(followers__id = current_user.id)
+		results = []
+		for item in rooms:
+			pass
+			
+		return results
+	except Exception as e:
+		print(str(e))
+		return None
+
+
 def delete_room(room_dic):
 	pass
 
