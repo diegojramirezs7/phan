@@ -86,14 +86,44 @@ def suggest_users():
 def get_followers(current_user):
 	try:
 		followers = User.objects.filter(followers__id = current_user.id)
+		results = []
+		for item in followers:
+			d = {
+				'key': item.key,
+				'name': item.name,
+				'url': item.user_url,
+				'followers': item.followers.all().count(),
+				'bio': item.bio,
+				'score': item.score,
+				'relevantRels': {'follower': True, 'suggested': False}
+			}
+			results.append(d)
+
+		return results
 	except Exception as e:
 		print(str(e))
 		return None
 
+
 def get_following(current_user):
 	try:
-		followers = User.objects.filter(following__id = current_user.id)
+		following = User.objects.filter(following__id = current_user.id)
+		for item in following:
+			d = {
+				'key': item.key,
+				'name': item.name,
+				'url': item.user_url,
+				'followers': item.followers.all().count(),
+				'bio': item.bio,
+				'score': item.score,
+				'relevantRels': {'following': True, 'suggested': False}
+			}
+			results.append(d)
 
+		return results
+	except Exception as e:
+		print(str(e))
+		return None
 
 
 
