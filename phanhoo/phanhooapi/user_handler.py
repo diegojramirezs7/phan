@@ -75,9 +75,12 @@ def user_updated_response(user, current_user):
 
 
 
-def suggest_users():
+def suggest_users(current_user):
 	try:
-		pass
+		followers = get_followers(current_user)
+		following = get_following(current_user)
+
+		# users interested in same rooms.
 	except Exception as e:
 		print(str(e))
 		return None
