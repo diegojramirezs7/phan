@@ -180,7 +180,11 @@ def get_room_convos(room, current_user):
 
 def get_room(name, key=""):
 	try:
-		pass
+		room = Room.objects.get(name = name)
+		if room:
+			return room
+		else:
+			return None
 	except Exception as e:
 		print(str(e))
 		return None
@@ -192,7 +196,7 @@ def get_rooms_saved(current_user):
 		results = []
 		for item in rooms:
 			pass
-			
+
 		return results
 	except Exception as e:
 		print(str(e))
